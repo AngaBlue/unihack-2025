@@ -3,8 +3,9 @@ import { useThree } from "./ThreeContext";
 import { useEffect } from "react";
 import * as THREE from "three";
 
-const Terrarium = () => {
+const TerrariumTwo = () => {
   const { scene, camera } = useThree();
+  console.log("called1")
 
   useEffect(() => {
     const geometry = new THREE.BoxGeometry(150, 150, 150);
@@ -25,7 +26,7 @@ const Terrarium = () => {
 
     // Animation loop to update the scene
     const animate = () => {
-      line.rotation.y += 0.0005;
+      line.rotation.y += 0.001;
       requestAnimationFrame(animate);
     };
 
@@ -35,4 +36,4 @@ const Terrarium = () => {
   return null; // Nothing to render in the DOM directly for now
 };
 
-export default Terrarium;
+export default TerrariumTwo;

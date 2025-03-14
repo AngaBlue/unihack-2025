@@ -21,7 +21,7 @@ const ThreeEnvironment: React.FC<{ children: React.ReactNode }> = ({ children })
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.addEventListener("change", () => renderer.render(scene, camera));
 
-    // Fix the skybox
+    //bug fixing for skybox
     controls.minDistance = 10;
     controls.maxDistance = 1500;
 
