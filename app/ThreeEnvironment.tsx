@@ -2,6 +2,7 @@
 import { type ReactNode, useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three-stdlib';
+import { useThree } from './ThreeContext';
 
 interface ThreeEnvironmentProps {
 	children?: ReactNode;
@@ -15,10 +16,9 @@ THREE ENVIRONMENT CONTAINS THE THREEJS SCENE AND CAMERA AS WELL AS THE SKYBOX RE
 
 const ThreeEnvironment: React.FC<ThreeEnvironmentProps> = ({ children }) => {
 	const mountRef = useRef<HTMLDivElement>(null);
+	const { camera, scene } = useThree();
 
 	useEffect(() => {
-		const scene = new THREE.Scene();
-		const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 45, 30000);
 		camera.position.set(0, 0, 500);
 
 		const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -63,7 +63,7 @@ const ThreeEnvironment: React.FC<ThreeEnvironmentProps> = ({ children }) => {
 		};
 
 		animate();
-	}, []);
+	}, [scene, camera]);
 
 	// threejs scene is mounted here, children will include idk everything else i suppose
 	return <div ref={mountRef}>{children}</div>;
