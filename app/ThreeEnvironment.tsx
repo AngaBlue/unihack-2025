@@ -46,6 +46,17 @@ const ThreeEnvironment: React.FC<{ children: React.ReactNode }> = ({ children })
     const skybox = new THREE.Mesh(skyboxGeo, skyboxArray);
     scene.add(skybox);
 
+	    // Add a light source at the top (using DirectionalLight)
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // White light
+    directionalLight.position.set(0, 1000, 0); // Position the light at the top
+    directionalLight.castShadow = true; // Optional: enables shadows
+    scene.add(directionalLight);
+
+    // Add an ambient light for general illumination
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.5); // Soft light to fill the scene
+    scene.add(ambientLight);
+
+
     const animate = () => {
       renderer.render(scene, camera);
       requestAnimationFrame(animate);
