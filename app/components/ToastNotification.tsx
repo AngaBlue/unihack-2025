@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { FaCheck, FaExclamation, FaInfo } from 'react-icons/fa';
 
-export default function BaseToast({ id, type, name, message, duration }: Toast) {
+export default function ToastNotification({ id, type, name, message, duration }: Toast) {
 	const [isVisible, setIsVisible] = useState(false);
 	const timeoutsRef = useRef<Record<string, ReturnType<typeof setTimeout>>>({}); // Object to hold the timeouts
 
