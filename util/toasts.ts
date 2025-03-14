@@ -39,8 +39,10 @@ export function createToast(props: ToastProps) {
 	// If the page is not hydrated, do not create the toast.
 	if (!hydrated) return;
 
+  console.log('Creating toast :)')
+
 	const toastId = id++;
-	const duration = props.duration ?? 5_000;
+	const duration = props.duration ?? 60_000;
 	const type = props.type ?? ToastType.INFO;
 	const name = props.name ?? 'Unknown';
 
