@@ -1,16 +1,15 @@
-import ThreeEnvironment from "./ThreeEnvironment";
-import BackgroundWrapper from "./BackgroundWrapper";
-import SpeechPopup from "@/components/SpeechPopup";
+import SpeechModal from '@/components/SpeechModal';
+import BackgroundWrapper from './BackgroundWrapper';
+import ThreeEnvironment from './ThreeEnvironment';
 function App() {
-  return (
-    <div>
-
-		<SpeechPopup/>
-		<BackgroundWrapper>
-      <ThreeEnvironment />
-		</BackgroundWrapper>
-    </div>
-  );
+	return (
+		<div>
+			<SpeechModal />
+			<BackgroundWrapper>
+				<ThreeEnvironment />
+			</BackgroundWrapper>
+		</div>
+	);
 }
 
 export default App;
