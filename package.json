@@ -9,6 +9,7 @@
 		"lint": "biome check --fix --error-on-warnings"
 	},
 	"dependencies": {
+		"env": "^0.0.2",
 		"next": "15.2.2",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
@@ -25,6 +26,9 @@
 		"typescript": "^5"
 	},
 	"pnpm": {
-		"onlyBuiltDependencies": ["@biomejs/biome", "sharp"]
+		"onlyBuiltDependencies": [
+			"@biomejs/biome",
+			"sharp"
+		]
 	}
 }
