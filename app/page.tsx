@@ -1,16 +1,18 @@
-import Terrarium from './Terrarium';
-import ThreeEnvironment from './ThreeEnvironment';
-import Client from './client';
+import ThreeEnvironment from "./ThreeEnvironment";
+import Terrarium from "./Terrarium";
+import TerrariumTwo from "./TerrariumTwo";
 
 function App() {
-	return (
-		<div>
-			<Client />
-			<ThreeEnvironment>
-				<Terrarium />
-			</ThreeEnvironment>
-		</div>
-	);
+  return (
+    <div>
+
+      <ThreeEnvironment>
+		<Terrarium />
+		<TerrariumTwo />
+	  </ThreeEnvironment>
+
+    </div>
+  );
 }
 
 export default App;

@@ -1,0 +1,79 @@
+# Blender MTL File: 'mushrooms.blend'
+# Material Count: 7
+
+newmtl Mushrooms1
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.272727 0.272727 0.272727
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:\\Users\\Jaqoo\\OneDrive\\Изображения\\3d practice\\грибы\\Mushrooms 2.png
+
+newmtl Mushrooms2
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.272727 0.272727 0.272727
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:\\Users\\Jaqoo\\OneDrive\\Изображения\\3d practice\\грибы\\Mushrooms 2.png
+
+newmtl Mushrooms3
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.272727 0.272727 0.272727
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:\\Users\\Jaqoo\\OneDrive\\Изображения\\3d practice\\грибы\\Mushrooms 2.png
+
+newmtl Mushrooms4
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.272727 0.272727 0.272727
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:\\Users\\Jaqoo\\OneDrive\\Изображения\\3d practice\\грибы\\Mushrooms 2.png
+
+newmtl Mushrooms5
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.272727 0.272727 0.272727
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:\\Users\\Jaqoo\\OneDrive\\Изображения\\3d practice\\грибы\\Mushrooms 2.png
+
+newmtl Mushrooms6
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.272727 0.272727 0.272727
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:\\Users\\Jaqoo\\OneDrive\\Изображения\\3d practice\\грибы\\Mushrooms 2.png
+
+newmtl Mushrooms7
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.272727 0.272727 0.272727
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:\\Users\\Jaqoo\\OneDrive\\Изображения\\3d practice\\грибы\\Mushrooms 2.png
