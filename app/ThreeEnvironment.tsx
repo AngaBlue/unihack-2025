@@ -1,44 +1,85 @@
 'use client';
-import { useEffect, useRef } from "react";
-import * as THREE from "three";
+import { type ReactNode, useEffect, useRef } from 'react';
+import * as THREE from 'three';
+import { OrbitControls } from 'three-stdlib';
+import { useThree } from './ThreeContext';
 
-const ThreeEnvironment = () => {
+interface ThreeEnvironmentProps {
+	children?: ReactNode;
+}
+
+/* 
+
+THREE ENVIRONMENT CONTAINS THE THREEJS SCENE AND CAMERA AS WELL AS THE SKYBOX RENDERING
+
+*/
+
+const ThreeEnvironment: React.FC<ThreeEnvironmentProps> = ({ children }) => {
 	const mountRef = useRef<HTMLDivElement>(null);
+	const { camera, scene } = useThree();
 
 	useEffect(() => {
-		const scene = new THREE.Scene();
-		const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-		const renderer = new THREE.WebGLRenderer();
+		camera.position.set(0, 0, 500);
 
-		// Attach renderer to div
-		renderer.setSize(window.innerWidth, window.innerHeight);
+		const renderer = new THREE.WebGLRenderer({ antialias: true });
 		if (mountRef.current) {
+			renderer.setSize(window.innerWidth, window.innerHeight);
 			mountRef.current.appendChild(renderer.domElement);
 		}
 
-		// Create cube
-		const geometry = new THREE.BoxGeometry(1, 1, 1);
-		const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-		const cube = new THREE.Mesh(geometry, material);
-		scene.add(cube);
-		camera.position.z = 5;
+		// Orbit controls - not really sure what this will be doing but
+		const controls = new OrbitControls(camera, renderer.domElement);
+		controls.addEventListener('change', () => renderer.render(scene, camera));
 
-		// Animation loop
+		/* Bug fix, ensure that users cannot exceed skybox dimension */
+		controls.minDistance = 10;
+		controls.maxDistance = 1500;
+
+		const texture_ft = new THREE.TextureLoader().load('/space_ft.png');
+		const texture_bk = new THREE.TextureLoader().load('/space_bk.png');
+		const texture_up = new THREE.TextureLoader().load('/space_up.png');
+		const texture_dn = new THREE.TextureLoader().load('/space_dn.png');
+		const texture_rt = new THREE.TextureLoader().load('/space_rt.png');
+		const texture_lf = new THREE.TextureLoader().load('/space_lf.png');
+
+		// texture array
+		const skyboxArray = [
+			new THREE.MeshBasicMaterial({ map: texture_ft, side: THREE.BackSide }),
+			new THREE.MeshBasicMaterial({ map: texture_bk, side: THREE.BackSide }),
+			new THREE.MeshBasicMaterial({ map: texture_up, side: THREE.BackSide }),
+			new THREE.MeshBasicMaterial({ map: texture_dn, side: THREE.BackSide }),
+			new THREE.MeshBasicMaterial({ map: texture_rt, side: THREE.BackSide }),
+			new THREE.MeshBasicMaterial({ map: texture_lf, side: THREE.BackSide })
+		];
+
+		const skyboxGeo = new THREE.BoxGeometry(10000, 10000, 10000);
+		const skybox = new THREE.Mesh(skyboxGeo, skyboxArray);
+		scene.add(skybox);
+
+		// LIGHTS 
+		const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Soft white light
+		scene.add(ambientLight);
+
+		const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+		directionalLight.position.set(1, 1, 1).normalize();
+		scene.add(directionalLight);
+
+		// const pointLight = new THREE.PointLight(0xffffff, 1, 1000);
+		// pointLight.position.set(50, 50, 50);
+		// scene.add(pointLight);
+
+
+		// ANIMATION LOOP
 		const animate = () => {
-			requestAnimationFrame(animate);
-			cube.rotation.x += 0.01;
-			cube.rotation.y += 0.01;
 			renderer.render(scene, camera);
+			requestAnimationFrame(animate);
 		};
+
 		animate();
+	}, [scene, camera]);
 
-		// Cleanup
-		return () => {
-			renderer.dispose();
-		};
-	}, []);
-
-	return <div ref={mountRef} />;
+	// threejs scene is mounted here, children will include idk everything else i suppose
+	return <div ref={mountRef}>{children}</div>;
 };
 
 export default ThreeEnvironment;
