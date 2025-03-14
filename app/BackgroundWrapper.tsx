@@ -1,9 +1,10 @@
-import type { ReactNode } from 'react';
+'use client';
 
-interface BackgroundWrapperProps {
-	children: ReactNode;
-}
+const BackgroundWrapper = (props:any) => {
+    console.log("RENDERED")
+	return (
+    <div></div>
+    )
+};
 
-export default function BackgroundWrapper({ children }: BackgroundWrapperProps) {
-	return <div>{children}</div>;
-}
+export default BackgroundWrapper;

@@ -4,9 +4,9 @@ import ThreeEnvironment from './ThreeEnvironment';
 function App() {
 	return (
 		<div>
-			<BackgroundWrapper>
-				<ThreeEnvironment />
-			</BackgroundWrapper>
+			<ThreeEnvironment>
+				<BackgroundWrapper />
+			</ThreeEnvironment>
 		</div>
 	);
 }
