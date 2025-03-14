@@ -1,9 +1,19 @@
-import type { ReactNode } from 'react';
+'use client';
 
-interface BackgroundWrapperProps {
-	children: ReactNode;
-}
+const BackgroundWrapper = (props:any) => {
+	return (
+        <div
+        className="flex flex-col flex-grow"
+                style={{
+                    position: "relative",
+                }}
+                >
 
-export default function BackgroundWrapper({ children }: BackgroundWrapperProps) {
-	return <div>{children}</div>;
-}
+  <image src="https://codinhood.com/images/articles/create-a-skybox/skybox-cover3.png" alt="Cover Image" />
+
+
+</div>
+    )
+};
+
+export default BackgroundWrapper;
