@@ -5,7 +5,10 @@ function App() {
   return (
     <div>
 
-      <ThreeEnvironment />
+	
+      <ThreeEnvironment>
+		<BackgroundWrapper />
+	  </ThreeEnvironment>
 
     </div>
   );

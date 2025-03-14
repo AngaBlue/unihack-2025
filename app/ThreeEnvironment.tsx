@@ -1,16 +1,19 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, ReactNode } from "react";
 import * as THREE from "three";
-import { TGALoader, OrbitControls } from "three-stdlib";
+import { OrbitControls } from "three-stdlib";
 
-const ThreeEnvironment = () => {
+interface ThreeEnvironmentProps {
+  children?: ReactNode;
+}
+
+const ThreeEnvironment: React.FC<ThreeEnvironmentProps> = ({ children }) => {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 45, 30000);
-    camera.position.set(0, 0, 500);  
+    const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 45, 30000);
+    camera.position.set(0, 0, 500);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     if (mountRef.current) {
@@ -18,21 +21,22 @@ const ThreeEnvironment = () => {
       mountRef.current.appendChild(renderer.domElement);
     }
 
-    // Set up OrbitControls
+    // Orbit controls - not really sure what this will be doing but
     let controls = new OrbitControls(camera, renderer.domElement);
-    controls.addEventListener('change', () => renderer.render(scene, camera));
+    controls.addEventListener("change", () => renderer.render(scene, camera));
 
-	controls.minDistance = 500;
-	controls.maxDistance = 1500;
+    /* Bug fix, ensure that users cannot exceed skybox dimension */
+    controls.minDistance = 10;
+    controls.maxDistance = 1500;
 
-    // Load textures for the skybox
-    let texture_ft = new TGALoader().load('/galaxy-X.tga');
-    let texture_bk = new TGALoader().load('/galaxy-Y.tga');
-    let texture_up = new TGALoader().load('/galaxy-Z.tga');
-    let texture_dn = new TGALoader().load('/galaxy+X.tga');
-    let texture_rt = new TGALoader().load('/galaxy+Y.tga');
-    let texture_lf = new TGALoader().load('/galaxy+Z.tga');
+    let texture_ft = new THREE.TextureLoader().load("/space_ft.png");
+    let texture_bk = new THREE.TextureLoader().load("/space_bk.png");
+    let texture_up = new THREE.TextureLoader().load("/space_up.png");
+    let texture_dn = new THREE.TextureLoader().load("/space_dn.png");
+    let texture_rt = new THREE.TextureLoader().load("/space_rt.png");
+    let texture_lf = new THREE.TextureLoader().load("/space_lf.png");
 
+    // texture array
     let skyboxArray = [
       new THREE.MeshBasicMaterial({ map: texture_ft, side: THREE.BackSide }),
       new THREE.MeshBasicMaterial({ map: texture_bk, side: THREE.BackSide }),
@@ -46,17 +50,17 @@ const ThreeEnvironment = () => {
     let skybox = new THREE.Mesh(skyboxGeo, skyboxArray);
     scene.add(skybox);
 
-    // Start the animation loop
+    // ANIMATION LOOP
     const animate = () => {
       renderer.render(scene, camera);
       requestAnimationFrame(animate);
     };
 
     animate();
-
   }, []);
 
-  return <div ref={mountRef} />;
+  // threejs scene is mounted here, children will include idk everything else i suppose 
+  return <div ref={mountRef}>{children}</div>;
 };
 
 export default ThreeEnvironment;
