@@ -25,6 +25,7 @@ const ThreeEnvironment: React.FC<{ children: React.ReactNode }> = ({ children })
     controls.minDistance = 10;
     controls.maxDistance = 1500;
 
+	// get textures from public and append to the skybox
     const texture_ft = new THREE.TextureLoader().load("/space_ft.png");
     const texture_bk = new THREE.TextureLoader().load("/space_bk.png");
     const texture_up = new THREE.TextureLoader().load("/space_up.png");

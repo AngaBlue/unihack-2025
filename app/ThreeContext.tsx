@@ -1,4 +1,8 @@
-// ThreeContext.tsx
+/* 
+Created a new react context that stores the three js scene and camera objects.
+That way any children component that we wanna render can take from this and use it to render 3d objects.
+*/
+
 import { createContext, useContext } from "react";
 import * as THREE from "three";
 
