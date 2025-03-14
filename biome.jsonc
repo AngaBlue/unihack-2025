@@ -1,4 +1,12 @@
 {
-  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-  "extends": ["@angablue/biome-config"]
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"extends": ["@angablue/biome-config"],
+	"overrides": [
+		{
+			"include": ["*.tsx"],
+			"javascript": {
+				"globals": ["React"]
+			}
+		}
+	]
 }
