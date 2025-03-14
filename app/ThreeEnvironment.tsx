@@ -7,6 +7,12 @@ interface ThreeEnvironmentProps {
   children?: ReactNode;
 }
 
+/* 
+
+THREE ENVIRONMENT CONTAINS THE THREEJS SCENE AND CAMERA AS WELL AS THE SKYBOX RENDERING
+
+*/
+
 const ThreeEnvironment: React.FC<ThreeEnvironmentProps> = ({ children }) => {
   const mountRef = useRef<HTMLDivElement>(null);
 

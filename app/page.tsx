@@ -1,5 +1,5 @@
 import ThreeEnvironment from "./ThreeEnvironment";
-import BackgroundWrapper from "./BackgroundWrapper";
+import Terrarium from "./Terrarium";
 
 function App() {
   return (
@@ -7,7 +7,7 @@ function App() {
 
 	
       <ThreeEnvironment>
-		<BackgroundWrapper />
+		<Terrarium />
 	  </ThreeEnvironment>
 
     </div>
