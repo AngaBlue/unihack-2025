@@ -9,7 +9,6 @@
 		"lint": "biome check --fix --error-on-warnings"
 	},
 	"dependencies": {
-		"env": "^0.0.2",
 		"next": "15.2.2",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
@@ -22,6 +21,7 @@
 		"@types/node": "^20",
 		"@types/react": "^19",
 		"@types/react-dom": "^19",
+		"@types/three": "^0.174.0",
 		"tailwindcss": "^4",
 		"typescript": "^5"
 	},
