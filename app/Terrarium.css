@@ -1,0 +1,214 @@
+body {
+				margin: 0px;
+				background-color: #000000;
+				overflow: hidden;
+        background-color: #dfaeb9;
+background-image: url("data:image/svg+xml,%3Csvg width='152' height='126' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23b722c9' fill-opacity='0.55'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+			}
+
+.st1{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+
+li{list-style-type: none;}
+a:hover{cursor: pointer;}
+p{
+  text-transform:uppercase;
+  font-family: Arial;
+  font-size: 10.5px;
+  margin: 0px;
+  text-align: center;
+  font-weight: 800;}
+
+.title{  
+  
+  h5{
+    margin: 0px;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-family: Arial;
+    font-size: 1.5em;
+    margin: 0 auto;
+    color: #CAA8F5;
+    border-bottom: 3px solid #230C33;
+  }
+  
+}
+
+
+.menu-container{
+  position: absolute;
+  height: 100vh;
+}
+
+.nav-toggle{
+  position: absolute;
+  left: 15px;
+  top: 20px;
+  width:500px;
+  z-index: 1000;
+  cursor: pointer;
+  
+    &.hamburger {
+      width: 35px;
+      height: 35px; 
+      &:hover{
+      cursor: pointer;
+    }
+      
+      span {
+      width: 30px;
+      height: 2px;
+      background-color: #ecf0f1;
+      display: block;
+      margin: 5px auto;
+      -webkit-transition: all 0.3s ease-in-out;
+      -o-transition: all 0.3s ease-in-out;
+      transition: all 0.3s ease-in-out;
+    }
+      &.open span:nth-child(1) {
+       width: 20px;
+       -webkit-transform: translateX(-10px) rotate(-45deg);
+       -ms-transform: translateX(-10px) rotate(-45deg);
+       -o-transform: translateX(-10px) rotate(-45deg);
+       transform: translateX(-10px) rotate(-45deg);
+    }
+      &.hamburger.open span:nth-child(3) {
+        width: 20px;
+        webkit-transform: translateX(-10px) rotate(45deg);
+        -ms-transform: translateX(-10px) rotate(45deg);
+        -o-transform: translateX(-10px) rotate(45deg);
+        transform: translateX(-10px) rotate(45deg);
+      }
+    }
+}
+
+
+
+nav{
+  position:fixed;
+  left: 0;
+  top: 0;
+  transform: translate3d(-100%, 0, 0);
+  transition:  all .25s ease-out;
+  background: rgba(35, 12, 51, .5 );
+  padding-top: 35px;
+  height: 100%;
+  width: 250px;
+}
+
+.nav-open nav{
+  transform: translate3d(0, 0, 0);
+  transition:  all .4s ease;
+}
+
+ul{
+  padding:0px;
+  
+  button{
+      width: 80%;
+      padding: 10px 0px;
+      background: transparent;
+       display: block; 
+      margin: 0 auto;
+      margin-bottom: 10px;
+      border: 2px solid #230C33;
+      color: #230C33;
+      
+      &:hover{
+        cursor: pointer;
+        border: 2px solid hotpink; ;
+        color: #CAA8F5;
+      } 
+    }
+    .active button{
+      color: #CAA8F5;
+      border: 2px solid hotpink; ;
+    }
+
+  li{
+    
+    a{
+        color: #230C33;
+       -webkit-transition: all 1.5s;
+      transition: all .5s;
+    }
+
+     svg{
+      stroke: #230C33;
+      width: 45px;
+       display: block;
+        margin: 0 auto;
+        fill:transparent;
+        stroke-width: 2.5px;
+       -webkit-transition: all .25s;
+        transition: all .25s;
+    }
+    
+   
+  }
+  
+  li:hover{
+    a{
+      color: #CAA8F5;
+    -webkit-transition: all .25s;
+    transition: all .25s;
+    }
+    svg{
+      stroke: #FFF;
+      transform: translateY(-10px);
+      -webkit-transition: all .25s;
+      transition: all .25s;
+    }
+  }
+  
+  li{
+    .toggle{
+       &.selected{
+       color: #CAA8F5;
+            svg{
+              stroke: #FFF;
+              transform: translateY(-10px);
+            }
+      }
+    }
+   }
+  
+}
+
+
+  ul.container-controls{
+    width: 200px;
+    margin: 0 auto;
+    padding: 25px 0px 0px 0px;
+    li{
+      width: 60px;
+      display: inline-block;
+    }
+  }
+
+
+ul.object-controls{
+    width: 100%;
+    display: block;
+    float: left;
+    margin-top: 0px;
+ 
+  li{
+    width:50%;
+    float:left;
+    text-align:center;
+    padding: 5px 0px;
+  }
+  
+  a.object > p{
+    margin: 0px;
+  }
+}
+
+ul.create-objects{
+  li{
+    width: 50%;
+    float:left;
+    padding: 10px 0px;
+  }
+}
