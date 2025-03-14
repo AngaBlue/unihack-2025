@@ -4,12 +4,11 @@ import { type Toast, ToastType, deleteToast } from '@/util/toasts';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { FaCheck, FaExclamation, FaInfo } from 'react-icons/fa';
+import { FaX } from 'react-icons/fa6';
 
 export default function ToastNotification({ id, type, name, message, duration }: Toast) {
 	const [isVisible, setIsVisible] = useState(false);
 	const timeoutsRef = useRef<Record<string, ReturnType<typeof setTimeout>>>({}); // Object to hold the timeouts
-
-	const [progressBarStyle, setProgressBarStyle] = useState({});
 
 	useEffect(() => {
 		if (!duration) return;
@@ -17,6 +16,7 @@ export default function ToastNotification({ id, type, name, message, duration }:
 		requestAnimationFrame(() => {
 			setIsVisible(true);
 		});
+
 		const fadeOutTimeout = setTimeout(() => {
 			setIsVisible(false);
 			// Set up a timeout to call deleteToast after the animation completes
@@ -27,13 +27,6 @@ export default function ToastNotification({ id, type, name, message, duration }:
 			timeoutsRef.current[`delete_${id}`] = deleteTimeout;
 		}, duration - 300);
 
-		setProgressBarStyle({
-			animationName: 'progressBar',
-			animationTimingFunction: 'linear',
-			animationDuration: `${duration - 300}ms`,
-			animationFillMode: 'forwards' // Keeps the state at the end of the animation
-		});
-
 		timeoutsRef.current[id.toString()] = fadeOutTimeout; // Store the fadeOutTimeout for cleanup
 
 		return () => {
@@ -43,47 +36,40 @@ export default function ToastNotification({ id, type, name, message, duration }:
 		};
 	}, [duration, id]);
 
-	let background = 'bg-[#2196f3]';
-	let icon = <FaInfo className='text-[#2196f3]' />;
+	let Icon = FaInfo;
 
 	switch (type) {
 		case ToastType.ERROR:
-			background = 'bg-[#ff5252]';
-			icon = <FaExclamation className='text-[#fff]' />;
+			Icon = FaExclamation;
 			break;
 		case ToastType.SUCCESS:
-			background = 'bg-[#4caf50]';
-			icon = <FaCheck className='text-[#fff]' />;
+			Icon = FaCheck;
 			break;
 		case ToastType.INFO:
-			background = 'bg-[#2196f3]';
-			icon = <FaInfo className='text-[#fff]' />;
+			Icon = FaInfo;
 			break;
 		default:
+			Icon = FaExclamation;
 			break;
 	}
 
 	return (
-		<div className='fixed bottom-8 transition-all flex items-center justify-center duration-300 min-w-[280px] min-h-[60px]'>
-			<div
-				className={clsx(
-					background,
-					'rounded-lg h-[60px] px-[25px] text-white flex justify-start items-center gap-4 font-semibold w-full min-w-fit max-w-full transition-all duration-300 ease-out relative pointer-events-auto',
-					isVisible ? 'opacity-100 translate-y-0 ' : 'opacity-0 translate-y-10 invisible'
-				)}
-			>
-				{icon}
-				<button type='button'>X</button>
-			</div>
-			{name}
-			{message}
-			<div
-				className={clsx(
-					'w-full h-1 rounded-b-lg absolute z-10 left-0 bottom-0 transition-all duration-300 ease-out',
-					isVisible ? 'opacity-100 translate-y-0 ' : 'opacity-0 translate-y-10 invisible'
-				)}
-			>
-				<div className='h-full bg-white rounded-bl-lg ' style={progressBarStyle} />
+		<div
+			className={clsx(
+				'w-full rounded-2xl bg-highlight p-4 relative text-foreground pointer-events-auto',
+				isVisible ? 'opacity-100 translate-y-0 ' : 'opacity-0 translate-y-10 invisible'
+			)}
+		>
+			<div className='bg-background flex items-center gap-4 w-full p-4 rounded-xl'>
+				<Icon className='' />
+				<div>
+					<span className='font-bold'>{name}</span>
+					<br />
+					<span>{message}</span>
+				</div>
+				<button type='button' onClick={() => deleteToast(id)}>
+					<FaX />
+				</button>
 			</div>
 		</div>
 	);
