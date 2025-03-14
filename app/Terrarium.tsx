@@ -1,38 +1,38 @@
-"use client";
-import { useThree } from "./ThreeContext";
-import { useEffect } from "react";
-import * as THREE from "three";
+'use client';
+import { useEffect } from 'react';
+import * as THREE from 'three';
+import { useThree } from './ThreeContext';
 
 const Terrarium = () => {
-  const { scene, camera } = useThree();
+	const { scene, camera } = useThree();
 
-  useEffect(() => {
-    const geometry = new THREE.BoxGeometry(150, 150, 150);
-    const edges = new THREE.EdgesGeometry(geometry);
+	useEffect(() => {
+		const geometry = new THREE.BoxGeometry(150, 150, 150);
+		const edges = new THREE.EdgesGeometry(geometry);
 
-    const material = new THREE.LineBasicMaterial({ 
-        color: 0xffffff,
-        transparent: true,
-        linejoin: 'bevel',
-        opacity: 0.8
-    });
+		const material = new THREE.LineBasicMaterial({
+			color: 0xffffff,
+			transparent: true,
+			linejoin: 'bevel',
+			opacity: 0.8
+		});
 
-    const line = new THREE.LineSegments(edges, material);
-    
-    scene.add(line);
+		const line = new THREE.LineSegments(edges, material);
 
-    line.position.set(0, 0, -5);
+		scene.add(line);
 
-    // Animation loop to update the scene
-    const animate = () => {
-      line.rotation.y += 0.0005;
-      requestAnimationFrame(animate);
-    };
+		line.position.set(0, 0, -5);
 
-    animate();
-  }, [scene, camera]);
+		// Animation loop to update the scene
+		const animate = () => {
+			line.rotation.y += 0.0005;
+			requestAnimationFrame(animate);
+		};
 
-  return null; // Nothing to render in the DOM directly for now
+		animate();
+	}, [scene, camera]);
+
+	return null; // Nothing to render in the DOM directly for now
 };
 
 export default Terrarium;
