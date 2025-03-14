@@ -1,14 +1,14 @@
-import ThreeEnvironment from "./ThreeEnvironment";
-import BackgroundWrapper from "./BackgroundWrapper";
+import BackgroundWrapper from './BackgroundWrapper';
+import ThreeEnvironment from './ThreeEnvironment';
 
 function App() {
-  return (
-    <div>
-		<BackgroundWrapper>
-      <ThreeEnvironment />
-		</BackgroundWrapper>
-    </div>
-  );
+	return (
+		<div>
+			<BackgroundWrapper>
+				<ThreeEnvironment />
+			</BackgroundWrapper>
+		</div>
+	);
 }
 
 export default App;

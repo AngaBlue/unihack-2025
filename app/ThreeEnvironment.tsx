@@ -1,6 +1,6 @@
 'use client';
-import { useEffect, useRef } from "react";
-import * as THREE from "three";
+import { useEffect, useRef } from 'react';
+import * as THREE from 'three';
 
 const ThreeEnvironment = () => {
 	const mountRef = useRef<HTMLDivElement>(null);
