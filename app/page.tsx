@@ -4,9 +4,9 @@ import BackgroundWrapper from "./BackgroundWrapper";
 function App() {
   return (
     <div>
-		<BackgroundWrapper>
+
       <ThreeEnvironment />
-		</BackgroundWrapper>
+
     </div>
   );
 }
