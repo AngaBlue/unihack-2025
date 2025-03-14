@@ -7,10 +7,10 @@ const ThreeEnvironment = () => {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Set up scene, camera, and renderer
+
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 45, 30000);
-    camera.position.set(0, 0, 500);  // Move camera closer to the scene
+    camera.position.set(0, 0, 500);  
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     if (mountRef.current) {
@@ -21,6 +21,9 @@ const ThreeEnvironment = () => {
     // Set up OrbitControls
     let controls = new OrbitControls(camera, renderer.domElement);
     controls.addEventListener('change', () => renderer.render(scene, camera));
+
+	controls.minDistance = 500;
+	controls.maxDistance = 1500;
 
     // Load textures for the skybox
     let texture_ft = new TGALoader().load('/galaxy-X.tga');
