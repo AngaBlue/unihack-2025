@@ -1,6 +1,6 @@
 import ThreeEnvironment from "./ThreeEnvironment";
 import Terrarium from "./Terrarium";
-// import TerrariumTwo from "./TerrariumTwo"; so we can load more than one at a time 
+import TerrariumTwo from "./TerrariumTwo";
 
 function App() {
   return (
@@ -8,6 +8,7 @@ function App() {
 
       <ThreeEnvironment>
 		<Terrarium />
+		<TerrariumTwo />
 	  </ThreeEnvironment>
 
     </div>

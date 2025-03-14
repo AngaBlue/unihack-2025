@@ -1,39 +1,43 @@
 "use client";
 import { useThree } from "./ThreeContext";
 import { useEffect } from "react";
+import { OBJLoader } from "three-stdlib";
+import { MTLLoader } from "three-stdlib";
 import * as THREE from "three";
 
 const TerrariumTwo = () => {
-  const { scene, camera } = useThree();
-  console.log("called1")
+  const { scene, camera } = useThree(); 
 
   useEffect(() => {
-    const geometry = new THREE.BoxGeometry(150, 150, 150);
-    const edges = new THREE.EdgesGeometry(geometry);
+    const mtlLoader = new MTLLoader();
+    mtlLoader.setPath("/"); 
+    mtlLoader.load("mushrooms.mtl", (materials) => {
+      materials.preload();
 
-    const material = new THREE.LineBasicMaterial({ 
-        color: 0xffffff,
-        transparent: true,
-        linejoin: 'bevel',
-        opacity: 0.8
+      const objLoader = new OBJLoader();
+      objLoader.setMaterials(materials);
+      objLoader.setPath("/");
+      objLoader.load("mushrooms.obj", (object) => {
+        object.position.set(0, 0, -5);
+        object.scale.set(10, 10, 10);
+        scene.add(object);
+      });
     });
 
-    const line = new THREE.LineSegments(edges, material);
-    
-    scene.add(line);
-
-    line.position.set(0, 0, -5);
-
-    // Animation loop to update the scene
-    const animate = () => {
-      line.rotation.y += 0.001;
-      requestAnimationFrame(animate);
+    return () => {
     };
+  }, [scene]); 
 
+
+  const animate = () => {
+    requestAnimationFrame(animate);
+  };
+
+  useEffect(() => {
     animate();
-  }, [scene, camera]);
+  }, [scene, camera]); 
 
-  return null; // Nothing to render in the DOM directly for now
+  return null;
 };
 
 export default TerrariumTwo;
