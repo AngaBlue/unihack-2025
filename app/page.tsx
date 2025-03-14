@@ -1,13 +1,13 @@
 import Terrarium from './Terrarium';
+import TerrariumTwo from './TerrariumTwo';
 import ThreeEnvironment from './ThreeEnvironment';
-import Client from './client';
 
 function App() {
 	return (
 		<div>
-			<Client />
 			<ThreeEnvironment>
 				<Terrarium />
+				<TerrariumTwo />
 			</ThreeEnvironment>
 		</div>
 	);

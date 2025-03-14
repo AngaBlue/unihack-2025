@@ -1,42 +1,38 @@
 'use client';
 import { useEffect } from 'react';
 import * as THREE from 'three';
+import { useThree } from './ThreeContext';
 
 const Terrarium = () => {
+	const { scene, camera } = useThree();
+
 	useEffect(() => {
-		// Get the scene from ThreeEnvironment (we'll assume it's passed down or globally available)
-		const scene = new THREE.Scene(); // Access your existing scene from ThreeEnvironment if it's passed
-		const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 45, 30000);
+		const geometry = new THREE.BoxGeometry(150, 150, 150);
+		const edges = new THREE.EdgesGeometry(geometry);
 
-		// Create a cube with transparency
-		const geometry = new THREE.BoxGeometry(5, 5, 5);
-		const material = new THREE.MeshBasicMaterial({
-			color: 0x00ff00,
+		const material = new THREE.LineBasicMaterial({
+			color: 0xffffff,
 			transparent: true,
-			opacity: 0.5
+			linejoin: 'bevel',
+			opacity: 0.8
 		});
-		const cube = new THREE.Mesh(geometry, material);
 
-		// Add the cube to the scene
-		scene.add(cube);
+		const line = new THREE.LineSegments(edges, material);
 
-		// Position the cube in front of the camera
-		cube.position.set(0, 0, -50);
+		scene.add(line);
 
-		// Animate the cube to make it float
+		line.position.set(0, 0, -5);
+
+		// Animation loop to update the scene
 		const animate = () => {
-			cube.rotation.x += 0.01; // Rotate the cube
-			cube.rotation.y += 0.01;
-			cube.position.y = Math.sin(Date.now() * 0.002) * 2; // Floating effect
-
-			// Request next frame for animation loop
+			line.rotation.y += 0.0005;
 			requestAnimationFrame(animate);
 		};
 
 		animate();
-	}, []);
+	}, [scene, camera]);
 
-	return null; // No additional DOM elements are needed
+	return null; // Nothing to render in the DOM directly for now
 };
 
 export default Terrarium;
