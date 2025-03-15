@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { type ReactElement, useState } from 'react';
+import { type type type FormEventHandler, type ReactElement, useState } from 'react';
 export interface ModalChainProps {
 	speechChain: ModalProps[];
 }
@@ -28,21 +28,20 @@ export interface ModalProps {
  */
 export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | null {
 	const [index, setIndex] = useState(0);
-	const [input, setInput] = useState((index < speechChain.length && speechChain[index].userInput) ? speechChain[index].userInput : '');
+	const [input, setInput] = useState(index < speechChain.length && speechChain[index].userInput ? speechChain[index].userInput : '');
 
-	const handleFormSubmit = (e) => {
+	const handleFormSubmit: FormEventHandler<HTMLFormElement> = e => {
 		e.preventDefault();
 		speechChain[index].userInput = input;
 		setIndex(index + 1);
 		setInput('');
-		document.getElementById("replyInput")?.setAttribute("value", ''); // speechChain[index].userInput);
+		document.getElementById('replyInput')?.setAttribute('value', ''); // speechChain[index].userInput);
 		console.log(speechChain[index].userInput);
-	  };
-
+	};
 
 	return (
 		<div className='text-white'>
-			{ (index < speechChain.length) && (
+			{index < speechChain.length && (
 				<div className='absolute left-10 right-10 bottom-10 top-10 p-5 bg-tansparent rounded-lg'>
 					<div>
 						<Image className='absolute -right-2 -bottom-2 rounded-full' src='/mascot.png' alt='placeholder' width={100} height={100} />
@@ -61,19 +60,19 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 
 						{/* Input Element */}
 						<form onSubmit={handleFormSubmit}>
-							{(index < speechChain.length && speechChain[index].inputInstruction) && <input id="replyInput"
-								type='text'
-								placeholder={speechChain[index].inputInstruction}
-								className='p-5 m-5 rounded-lg text-white'
-								onChange={(e) => setInput(e.target.value)}
-								value={input}
-							/>}
+							{index < speechChain.length && speechChain[index].inputInstruction && (
+								<input
+									id='replyInput'
+									type='text'
+									placeholder={speechChain[index].inputInstruction}
+									className='p-5 m-5 rounded-lg text-white'
+									onChange={e => setInput(e.target.value)}
+									value={input}
+								/>
+							)}
 
 							{/* Next Button / Close button / Submit Button*/}
-							<button
-								type='submit'
-								className='absolute right-10 bottom-10 p-5 bg-green-500/100 rounded-lg'
-							>
+							<button type='submit' className='absolute right-10 bottom-10 p-5 bg-green-500/100 rounded-lg'>
 								{/* Close button if this is the last item */}
 								{index < speechChain.length - 1 ? 'Next →' : 'Close X'}
 							</button>
@@ -83,7 +82,7 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 			)}
 		</div>
 	);
-};
+}
 
 export const speechChain: ModalProps[] = [
 	{

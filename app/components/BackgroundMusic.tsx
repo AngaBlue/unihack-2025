@@ -20,7 +20,7 @@ export default function BackgroundMusic() {
 		return () => {
 			stopMusic();
 			document.removeEventListener('click', play);
-		}
+		};
 	}, [playMusic, stopMusic]);
 
 	// Owls
@@ -59,7 +59,7 @@ export default function BackgroundMusic() {
 		return () => {
 			if (timeout) clearTimeout(timeout);
 		};
-	})
+	});
 
 	return null;
 }

@@ -1,6 +1,4 @@
 'use client';
-
-import { SpeechModal, speechChain } from '@/app/components/SpeechModal';
 import init from '@/three/init';
 import { hydrate } from '@/util/hydrated';
 import { ToastType, createToast } from '@/util/toasts';
