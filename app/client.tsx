@@ -1,69 +1,56 @@
 'use client';
 import init from '@/three/init';
 import { hydrate } from '@/util/hydrated';
-import { useEffect, useRef } from 'react';
+import { ToastType, createToast } from '@/util/toasts';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import BackgroundMusic from '../components/BackgroundMusic';
-import { GoalProvider } from '../context/GoalContext';
-import { ThreeProvider } from '../context/ThreeContext';
+import { GoalProvider } from './GoalContext';
+import { ThreeProvider } from './ThreeContext';
+import BackgroundMusic from './components/BackgroundMusic';
+import { SpeechModal, speechChain } from './components/SpeechModal';
+import ToastWrapper from './components/ToastWrapper';
 
 export default function Client() {
-	const sceneRef = useRef(new THREE.Scene());
-	const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
-	const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-	const divRef = useRef<HTMLDivElement>(null);
+	const [scene, setScene] = useState<THREE.Scene | null>(null);
+	const [camera, setCamera] = useState<THREE.PerspectiveCamera | null>(null);
+	const ref = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		hydrate();
 
 		// Scene
-		const scene = sceneRef.current;
+		if (!scene) {
+			const newScene = new THREE.Scene();
+			setScene(newScene);
+		}
 
 		// Camera
-		if (!cameraRef.current) {
-			cameraRef.current = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 45, 30000);
-			cameraRef.current.position.set(0, 0, 100);
+		if (!camera) {
+			const newCamera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 45, 30000);
+			setCamera(newCamera);
 		}
-		const camera = cameraRef.current;
 
-		// Ensure container exists
-		if (!divRef.current) return;
+		// Null-check ref, scene & camera
+		if (!(ref.current && scene && camera)) return;
 
-		// Renderer
-		if (!rendererRef.current) {
-			rendererRef.current = new THREE.WebGLRenderer({ antialias: true });
-			rendererRef.current.setSize(window.innerWidth, window.innerHeight);
-			divRef.current.appendChild(rendererRef.current.domElement);
-		}
-		const renderer = rendererRef.current;
+		createToast({
+			name: 'Growth Garden',
+			message: 'What does growth mean to you?',
+			type: ToastType.INFO
+		});
 
-		// Handle window resizing
-		const handleResize = () => {
-			if (camera && rendererRef.current) {
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-				rendererRef.current.setSize(window.innerWidth, window.innerHeight);
-			}
-		};
-		window.addEventListener('resize', handleResize);
+		init(scene, camera, ref.current);
+	}, [scene, camera, ref]);
 
-		// Populate scene with objects
-		init(scene, camera, renderer);
-
-		// Cleanup on unmount
-		return () => {
-			window.removeEventListener('resize', handleResize);
-			if (divRef.current && rendererRef.current) {
-				divRef.current.removeChild(rendererRef.current.domElement);
-			}
-		};
-	}, [sceneRef.current, cameraRef.current, divRef.current]);
+	if (!(scene && camera)) return null;
 
 	return (
 		<GoalProvider>
-			<ThreeProvider scene={sceneRef.current} camera={cameraRef.current} renderer={rendererRef.current}>
+			<ThreeProvider scene={scene} camera={camera}>
 				<BackgroundMusic />
-				<div ref={divRef} />
+				<SpeechModal speechChain={speechChain} />
+				<ToastWrapper />
+				<div ref={ref} />
 			</ThreeProvider>
 		</GoalProvider>
 	);

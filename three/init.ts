@@ -6,17 +6,16 @@ import { DragControls } from 'three-stdlib';
 import { FBXLoader } from 'three-stdlib';
 import { ImprovedNoise } from 'three-stdlib';
 import createSkybox from './createSkybox';
-import getFresnelMat from './getFresnelMat';
-
-interface DragEvent {
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	object: any;
-}
+import { getFresnelMat } from './getFresnelMat';
 
 const SCALE_FACTOR = 10;
-export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer) {
-	const startColor = '';
+var startColor: any;
+export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera, div: HTMLDivElement) {
 	camera.position.set(0, 0, 500);
+
+	const renderer = new THREE.WebGLRenderer({ antialias: true });
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	div.appendChild(renderer.domElement);
 
 	function getCorona() {
 		const radius = 0.85;
@@ -52,6 +51,9 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	}
 
 	camera.position.set(0, 0, 500);
+
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	div.appendChild(renderer.domElement);
 
 	/**
 	 * Add planet
@@ -107,11 +109,10 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 		robotGroup.add(object); // Add robot to parent group instead of directly to the scene
 
 		mixer = new THREE.AnimationMixer(object);
-		for (const clip of object.animations) {
-			if (!mixer) continue;
-			const action = mixer.clipAction(clip);
+		object.animations.forEach(clip => {
+			const action = mixer!.clipAction(clip);
 			animationActions.push(action);
-		}
+		});
 
 		if (animationActions.length > 0) {
 			activeAction = animationActions[0];
@@ -122,7 +123,7 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	/**
 	 * Add planetObjects
 	 */
-	const planetObjects: THREE.Object3D[] = [];
+	var planetObjects: THREE.Object3D[] = [];
 	const mtlLoader = new MTLLoader();
 	mtlLoader.setPath('/');
 	mtlLoader.load('mushrooms.mtl', materials => {
@@ -131,11 +132,11 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 		objLoader.setMaterials(materials);
 		objLoader.setPath('/');
 
-		objLoader.load('mushrooms.obj', (object: THREE.Object3D) => {
+		objLoader.load('mushrooms.obj', (object: any) => {
 			if (object instanceof THREE.Group) {
 				object.updateWorldMatrix(true, true);
 
-				for (const child of object.children) {
+				object.children.forEach(child => {
 					object.remove(child);
 
 					// If the child is a Mesh, recenter its geometry.
@@ -149,7 +150,7 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 
 					scene.add(child);
 					planetObjects.push(child);
-				}
+				});
 			} else {
 				if (object instanceof THREE.Mesh && object.geometry) {
 					object.geometry.center();
@@ -172,9 +173,9 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	dragControls.addEventListener('dragend', dragEndCallback);
 	dragControls.addEventListener('drag', dragCallback);
 
-	function dragStartCallback(event: DragEvent) {
+	function dragStartCallback(event: any) {
 		controls.enabled = false;
-		event.object.startColor = event.object.material.color.getHex();
+		startColor = event.object.material.color.getHex();
 		if (event.object.material.color) {
 			event.object.material.color.setHex(0x000000);
 		}
@@ -185,11 +186,11 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 		}
 	}
 
-	function dragCallback() {
+	function dragCallback(event: any) {
 		controls.enabled = false;
 	}
 
-	function dragEndCallback(event: DragEvent) {
+	function dragEndCallback(event: any) {
 		controls.enabled = true;
 		if (event.object.material.color) {
 			event.object.material.color.setHex(startColor);

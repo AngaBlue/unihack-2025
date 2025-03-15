@@ -12,13 +12,8 @@ interface LangflowResponse {
 	}[];
 }
 
-interface JSONMessageResponse {
-	motivational_messages: string[];
-	tasks: string[];
-}
-
-export function GET() {
-	return NextResponse.json({ message: 'Use POST method.' });
+export function GET(req: NextRequest) {
+	return NextResponse.json({ message: 'USE POST NOT GET FUCKWIT!' });
 }
 
 // 🚀 Export named POST function for Next.js App Router
@@ -88,8 +83,9 @@ export async function POST(req: NextRequest) {
 		}
 
 		// ✅ Convert string JSON to a valid object
-		const parsedMessage: JSONMessageResponse = JSON.parse(rawMessage);
-		return NextResponse.json({ success: true, motivationalMessage: parsedMessage.motivational_messages, tasks: parsedMessage.tasks });
+		const parsedMessage = JSON.parse(rawMessage);
+		console.log(parsedMessage);
+		return NextResponse.json({ success: true, motivationalMessage: parsedMessage['motivational_messages'], tasks: parsedMessage.tasks });
 	} catch (error) {
 		console.error('❌ API Error:', error);
 		return NextResponse.json({ error: (error as Error).message }, { status: 500 });
