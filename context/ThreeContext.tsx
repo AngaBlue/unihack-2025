@@ -1,15 +1,11 @@
 'use client';
-/* 
-Created a new react context that stores the three js scene and camera objects.
-That way any children component that we wanna render can take from this and use it to render 3d objects.
-*/
-
-import { createContext, useContext } from 'react';
+import { type ReactNode, createContext, useContext } from 'react';
 import type * as THREE from 'three';
 
 interface ThreeContextType {
 	scene: THREE.Scene;
-	camera: THREE.PerspectiveCamera;
+	camera: THREE.PerspectiveCamera | null;
+	renderer: THREE.WebGLRenderer | null;
 }
 
 const ThreeContext = createContext<ThreeContextType | undefined>(undefined);
@@ -22,10 +18,10 @@ export const useThree = () => {
 	return context;
 };
 
-export const ThreeProvider: React.FC<{ scene: THREE.Scene; camera: THREE.PerspectiveCamera; children: React.ReactNode }> = ({
-	scene,
-	camera,
-	children
-}) => {
-	return <ThreeContext.Provider value={{ scene, camera }}>{children}</ThreeContext.Provider>;
-};
+interface ThreeProviderProps extends ThreeContextType {
+	children: ReactNode;
+}
+
+export function ThreeProvider({ children, ...props }: ThreeProviderProps) {
+	return <ThreeContext.Provider value={props}>{children}</ThreeContext.Provider>;
+}

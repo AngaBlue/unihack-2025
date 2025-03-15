@@ -14,13 +14,9 @@ interface DragEvent {
 }
 
 const SCALE_FACTOR = 10;
-export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera, div: HTMLDivElement) {
+export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer) {
 	const startColor = '';
 	camera.position.set(0, 0, 500);
-
-	const renderer = new THREE.WebGLRenderer({ antialias: true });
-	renderer.setSize(window.innerWidth, window.innerHeight);
-	div.appendChild(renderer.domElement);
 
 	function getCorona() {
 		const radius = 0.85;
@@ -56,9 +52,6 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	}
 
 	camera.position.set(0, 0, 500);
-
-	renderer.setSize(window.innerWidth, window.innerHeight);
-	div.appendChild(renderer.domElement);
 
 	/**
 	 * Add planet
