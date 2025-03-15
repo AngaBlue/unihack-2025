@@ -4,8 +4,10 @@ import React, { createContext, useState, useContext, ReactNode } from 'react';
 interface GoalContextType {
   name: string;
   goal: string;
+  skillTree: string[];
   setName: (name: string) => void;
   setGoal: (goal: string) => void;
+  setSkillTree: (skillTree) => void;
 }
 
 // Create the context with an initial empty state
@@ -15,9 +17,10 @@ const GoalContext = createContext<GoalContextType | undefined>(undefined);
 export const GoalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [name, setName] = useState<string>(''); // Initialize with an empty string or any default value
   const [goal, setGoal] = useState<string>(''); // Same for goal state
+  const [skillTree, setSkillTree] = useState(''); 
 
   return (
-    <GoalContext.Provider value={{ name, goal, setName, setGoal }}>
+    <GoalContext.Provider value={{ name, goal, setName, setGoal, skillTree, setSkillTree}}>
       {children}
     </GoalContext.Provider>
   );

@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import { type FormEventHandler, type ReactElement, useState } from 'react';
 import { useGoalContext } from '@/app/GoalContext';
+import queryAI from '@/util/queryAI';
 
 export interface ModalChainProps {
 	speechChain: ModalProps[];
@@ -13,11 +14,15 @@ export interface ModalProps {
 	changeValue:ValueToChange;
 }
 
-export enum ValueToChange {
+enum ValueToChange {
 	NONE = 0,
 	NAME = 1,
 	GOAL = 2
 }
+
+
+
+
 
 // Requires Next Modal to be set up first.
 /**
@@ -38,11 +43,14 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 	
 	const { name, setName } = useGoalContext();
 	const { goal, setGoal } = useGoalContext();
+	const { skillTree, setSkillTree } = useGoalContext();
 
 	const [index, setIndex] = useState(0);
 	const [input, setInput] = useState('');
 
-	const handleFormSubmit: FormEventHandler<HTMLFormElement> = e => {
+	
+
+	const handleFormSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
 		e.preventDefault();
 		if (index < speechChain.length && speechChain[index].inputInstruction){
 			switch (speechChain[index].changeValue) {
@@ -53,26 +61,41 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 		setIndex(index + 1);
 		setInput('');
 		document.getElementById('replyInput')?.setAttribute('value', ''); // speechChain[index].userInput);
-		console.log(`Goal: ${goal}, Name: ${name} `);
+		console.log(`Goal: ${goal}, Name: ${name}, Index ${index} `);
+		
+		if (index >= speechChain.length){
+			const { success, tasks, motivationals } = await queryAI(goal);
+			
+			setSkillTree(tasks);
+			console.log(skillTree);
+			// TODO set Motivationals
+		}
 	};
 
 	return (
-		<div className='text-white'>
+		<div className='text-foreground text-xl'>
 			{index < speechChain.length && (
 				<div className='absolute left-10 right-10 bottom-10 top-10 p-5 bg-tansparent rounded-lg'>
 					<div>
 						<Image className='absolute -right-2 -bottom-2 rounded-full' src='/mascot.png' alt='placeholder' width={100} height={100} />
 					</div>
 					{/* SPEECH BUBBLE ELEMENT */}
-					<div className='relative bg-red-100/90 rounded-lg h-3/4 top-5'>
-						<p className='p-5 text-center'>{speechChain[index].text}</p>
-
+					<div className='relative bg-background/95 rounded-lg h-3/4 top-5 border-6 border-highlight'>
+						<p className='p-10 text-center align-middle'>{speechChain[index].text}</p>
+						
+						<div
+							className='absolute w-0 h-0
+							border-l-[64px] border-l-transparent
+							border-t-[60px] border-t-highlight
+							border-r-[9px] border-r-transparent
+							right-13 top-1/1'
+							/>
 						<div
 							className='absolute w-0 h-0 
-						border-l-[50px] border-l-transparent
-						border-t-[50px] border-t-red-100/90
-						border-r-[0px] border-r-transparent
-						left-3/4 top-1/1'
+							border-l-[50px] border-l-transparent
+							border-t-[50px] border-t-background
+							border-r-[5px] border-r-transparent
+							right-15 top-1/1'
 						/>
 
 						{/* Input Element */}
@@ -82,14 +105,14 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 									id='replyInput'
 									type='text'
 									placeholder={speechChain[index].inputInstruction}
-									className='p-5 m-5 rounded-lg text-white'
+									className='p-5 m-5 rounded-lg text-foreground'
 									onChange={e => setInput(e.target.value)}
 									value={input}
 								/>
 							)}
 
 							{/* Next Button / Close button / Submit Button*/}
-							<button type='submit' className='absolute right-10 bottom-10 p-5 bg-green-500/100 rounded-lg'>
+							<button type='submit' className='absolute right-10 bottom-10 p-5 bg-highlight/100 rounded-lg'>
 								{/* Close button if this is the last item */}
 								{index < speechChain.length - 1 ? 'Next →' : 'Close X'}
 							</button>
@@ -102,15 +125,14 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 }
 
 
-
 export const speechChain: ModalProps[] = [
 	{
 		text: 'Hey there traveler! You have arrived at the Growth Garden.',
 		changeValue: ValueToChange.NONE
 	},
 	{
-		text: 'I see! What do you hope to learn from me?',
-		inputInstruction: 'Your Goal:',
+		text: 'What do you hope to learn from me?',
+		inputInstruction: 'How can I get better at ...?',
 		changeValue: ValueToChange.GOAL
 	},
 	{
