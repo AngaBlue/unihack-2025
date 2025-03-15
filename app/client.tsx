@@ -14,7 +14,6 @@ export default function Client() {
 	const divRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		console.log('Hydrate');
 		hydrate();
 
 		// Scene
