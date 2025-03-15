@@ -55,7 +55,7 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
     
     const geometry = new THREE.IcosahedronGeometry(1, 6);
     const material = new THREE.MeshStandardMaterial({
-        emissive: 0xcf9fff,
+        emissive: 0x5D3FD3,
     });
     const sphere = new THREE.Mesh( geometry, material); 
     sphere.castShadow = true;
