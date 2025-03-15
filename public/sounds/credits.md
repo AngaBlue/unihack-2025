@@ -11,3 +11,7 @@ Happy Relaxing Loop by SergeQuadrado -- https://freesound.org/s/786250/ -- Licen
 BooBook Owl.mp3 by digifishmusic -- https://freesound.org/s/39321/ -- License: Attribution 4.0
 
 Owl Hooting.mp3 by WanderingLeprechaun -- https://freesound.org/s/668709/ -- License: Creative Commons 0
+
+bonfire flames sizzling by florianreichelt -- https://freesound.org/s/563764/ -- License: Creative Commons 0
+
+11 of 14 Rain and Traffic through the Night.mp3 by klankschap -- https://freesound.org/s/54766/ -- License: Attribution NonCommercial 4.0
