@@ -11,10 +11,14 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
     div.appendChild(renderer.domElement);
     
     // adding mesh for sphere planet
-    const PLANET_POSITION = new THREE.Vector3(0,0,0);
     const geometry = new THREE.SphereGeometry( 100, 100, 100 ); 
-    const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
-    const sphere = new THREE.Mesh( geometry, material ); 
+    const material = new THREE.MeshPhysicalMaterial({color: 0xCBC3E3, roughness: 0.5});
+    const sphere = new THREE.Mesh( geometry, material); 
+    sphere.castShadow = true;
+
+    /**
+     * SPHERE POSITION IS 10,10,10
+     */
     sphere.position.set(10,10,10);
 
         
@@ -48,26 +52,17 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
     const skybox = new THREE.Mesh(skyboxGeo, skyboxArray);
     scene.add(skybox);
 
-    // LIGHTS 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Soft white light
-    scene.add(ambientLight);
-
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(1, 1, 1).normalize();
+    const directionalLight = new THREE.DirectionalLight(0xE8B5BD, 1);
+    directionalLight.position.set(100, 100, 100).normalize();
+    directionalLight.target = sphere;
     scene.add(directionalLight);
 
-    const pointLight = new THREE.PointLight(0xffffff, 1, 1000);
-    pointLight.position.set(50, 50, 50);
-    scene.add(pointLight);
+    const ambientLight = new THREE.AmbientLight(0xE8B5BD, 0.1);
+    ambientLight.position.set(-100, 100, -100);
 
-    // function animate() {
-    //     requestAnimationFrame( animate );
+    scene.add(ambientLight);
 
-    //     sphere.rotation.x += 0.01;
-    //     sphere.rotation.y += 0.01;
 
-    //     renderer.render( scene, camera );
-    // };
 
     // ANIMATION LOOP
     const animate = () => {
