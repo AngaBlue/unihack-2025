@@ -1,4 +1,3 @@
-import { RefObject } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three-stdlib';
 import { MTLLoader } from 'three-stdlib';
@@ -9,7 +8,6 @@ import { PointerLockControls } from 'three/addons/controls/PointerLockControls.j
 
 var startColor:any;
 export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera, div: HTMLDivElement) {
-    
     camera.position.set(0, 0, 500);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
