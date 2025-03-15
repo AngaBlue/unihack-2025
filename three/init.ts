@@ -123,9 +123,9 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	});
 
 	/**
-	 * Add mushrooms 
+	 * Add planetObjects 
 	 */
-	var mushrooms: THREE.Object3D[] = [];
+	var planetObjects: THREE.Object3D[] = [];
 	const mtlLoader = new MTLLoader();
 	mtlLoader.setPath('/');
 	mtlLoader.load('mushrooms.mtl', materials => {
@@ -145,14 +145,13 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 			if (child instanceof THREE.Mesh && child.geometry) {
 				child.geometry.center();
 		  }
-			  
 
 			child.position.set(30, 30, 30);
 		
 			child.scale.set(SCALE_FACTOR, SCALE_FACTOR,SCALE_FACTOR);
 			
 			scene.add(child);
-			mushrooms.push(child);
+			planetObjects.push(child);
 		  });
 		} else {
 		  if (object instanceof THREE.Mesh && object.geometry) {
@@ -161,9 +160,9 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 		  object.position.set(55, 55, 55);
 		  object.scale.set(SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR);
 		  planet.add(object);
-		  mushrooms.push(object);
+		  planetObjects.push(object);
 		}
-		console.log('Mushrooms loaded:', mushrooms);
+		console.log('planetObjects loaded:', planetObjects);
 	  }
 	
 	);
@@ -171,9 +170,9 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 
 
 	/**
-	 * Adding drag controls for mushrooms 
+	 * Adding drag controls for planetObjects 
 	 */
-	const dragControls = new DragControls(mushrooms, camera, renderer.domElement);
+	const dragControls = new DragControls(planetObjects, camera, renderer.domElement);
 
 	dragControls.addEventListener('dragstart', dragStartCallback);
 	dragControls.addEventListener('dragend', dragEndCallback);
