@@ -9,14 +9,22 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     div.appendChild(renderer.domElement);
+    
+    // adding mesh for sphere planet
+    const PLANET_POSITION = new THREE.Vector3(0,0,0);
+    const geometry = new THREE.SphereGeometry( 100, 100, 100 ); 
+    const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
+    const sphere = new THREE.Mesh( geometry, material ); 
+    sphere.position.set(10,10,10);
 
-    // Orbit controls - not really sure what this will be doing but
+        
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.minDistance = 50;
+    controls.target = sphere.position;
     controls.addEventListener('change', () => renderer.render(scene, camera));
 
     /* Bug fix, ensure that users cannot exceed skybox dimension */
-    controls.minDistance = 10;
+    // controls.minDistance = 10;
+    controls.minDistance = sphere.position.getComponent(1) + 300;
     controls.maxDistance = 1500;
 
     const texture_ft = new THREE.TextureLoader().load('/space_ft.png');
@@ -69,16 +77,10 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 
     animate();
 
-    // adding mesh for sphere planet
-    const geometry = new THREE.SphereGeometry( 15, 32, 16 ); 
-    const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
-    const sphere = new THREE.Mesh( geometry, material ); 
-    
-    sphere.minDistance = 30; 
-    sphere.maxDistance = 50; 
+
+    // sphere.minDistance = 30; 
+    // sphere.maxDistance = 50; 
     scene.add( sphere );
-
-
 
 
 }
