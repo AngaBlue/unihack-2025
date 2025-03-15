@@ -2,13 +2,13 @@
 
 import { hydrate } from '@/util/hydrated';
 import { ToastType, createToast } from '@/util/toasts';
-import { useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import Terrarium from './Terrarium';
 import TerrariumTwo from './TerrariumTwo';
 import { ThreeProvider } from './ThreeContext';
 import ThreeEnvironment from './ThreeEnvironment';
-import { SpeechModal, NextButton, ModalProps } from '@/app/components/SpeechModal';
+import { SpeechModal, speechChain } from '@/app/components/SpeechModal';
 
 export default function Client() {
   const [scene, setScene] = useState<THREE.Scene | null>(null);
@@ -32,14 +32,9 @@ export default function Client() {
 
   if (!(scene && camera)) return null;
 
-  	const firstMessage:ModalProps = {
-		text:"Hey hey! ",
-		nextButton: document.createElement('button')
-	};
-
 	return (
 		<ThreeProvider scene={scene} camera={camera}>
-		<SpeechModal text={firstMessage.text} nextButton={firstMessage.nextButton} ></SpeechModal>
+			<SpeechModal speechChain={speechChain} />
 			<ThreeEnvironment>
 				<Terrarium />
 				<TerrariumTwo />
