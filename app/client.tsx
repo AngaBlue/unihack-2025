@@ -47,7 +47,7 @@ export default function Client() {
 	return (
 		<ThreeProvider scene={scene} camera={camera}>
 			<BackgroundMusic />
-			<SpeechModal speechChain={speechChain} />
+			{/* <SpeechModal speechChain={speechChain} /> */}
 			<ToastWrapper />
 			<div ref={ref} />
 		</ThreeProvider>
