@@ -10,7 +10,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Jaqoo\\OneDrive\\Изображения\\3d practice\\грибы\\Mushrooms 2.png
+map_Kd images/mushrooms2.png
 
 newmtl Mushrooms2
 Ns 0.000000
@@ -21,7 +21,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Jaqoo\\OneDrive\\Изображения\\3d practice\\грибы\\Mushrooms 2.png
+map_Kd images/mushrooms2.png
 
 newmtl Mushrooms3
 Ns 0.000000
@@ -32,7 +32,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Jaqoo\\OneDrive\\Изображения\\3d practice\\грибы\\Mushrooms 2.png
+map_Kd images/mushrooms2.png
 
 newmtl Mushrooms4
 Ns 0.000000
@@ -43,7 +43,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Jaqoo\\OneDrive\\Изображения\\3d practice\\грибы\\Mushrooms 2.png
+map_Kd images/mushrooms2.png
 
 newmtl Mushrooms5
 Ns 0.000000
@@ -54,7 +54,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Jaqoo\\OneDrive\\Изображения\\3d practice\\грибы\\Mushrooms 2.png
+map_Kd images/mushrooms2.png
 
 newmtl Mushrooms6
 Ns 0.000000
@@ -65,7 +65,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Jaqoo\\OneDrive\\Изображения\\3d practice\\грибы\\Mushrooms 2.png
+map_Kd images/mushrooms2.png
 
 newmtl Mushrooms7
 Ns 0.000000
@@ -76,4 +76,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Jaqoo\\OneDrive\\Изображения\\3d practice\\грибы\\Mushrooms 2.png
+map_Kd images/mushrooms2.png
