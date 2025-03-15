@@ -1,6 +1,7 @@
 'use client';
 import Image from 'next/image';
 import { type ReactElement, useState } from 'react';
+import { type ReactElement, useState } from 'react';
 
 export interface ModalChainProps {
 	speechChain: ModalProps[];
@@ -22,7 +23,12 @@ export interface ModalProps {
  * @param setModal
  * @param modal
  * @returns
+ * @param param0
+ * @param setModal
+ * @param modal
+ * @returns
  */
+export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | null {
 export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | null {
 	const [index, setIndex] = useState(0);
 	const [input, setInput] = useState((index < speechChain.length && speechChain[index].userInput) ? speechChain[index].userInput : '');
@@ -84,6 +90,7 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 
 export const speechChain: ModalProps[] = [
 	{
+		text: 'Hey there traveler! You have arrived at the Growth Garden.'
 		text: 'Hey there traveler! You have arrived at the Growth Garden.'
 	},
 	{
