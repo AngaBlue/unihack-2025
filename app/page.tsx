@@ -1,9 +1,7 @@
 import Client from './client';
 
 function App() {
-	return (
-		<Client />
-	);
+	return <Client />;
 }
 
 export default App;
