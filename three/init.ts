@@ -5,9 +5,46 @@ import { OBJLoader } from 'three-stdlib';
 import { DragControls } from 'three-stdlib';
 import { FBXLoader } from 'three-stdlib'; 
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+import { getFresnelMat } from './getFresnelMat';
+import { ImprovedNoise } from 'three-stdlib'; 
 
 var startColor:any;
 export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera, div: HTMLDivElement) {
+
+    function getCorona() {
+        const radius = 0.9;
+        const material = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            side: THREE.BackSide,
+        });
+        const geo = new THREE.IcosahedronGeometry(radius, 6);
+        const mesh = new THREE.Mesh(geo, material);
+        const noise = new ImprovedNoise();
+    
+        let v3 = new THREE.Vector3();
+        let p = new THREE.Vector3();
+        let pos = geo.attributes.position;
+        // @ts-ignore
+        pos.usage = THREE.DynamicDrawUsage;
+        const len = pos.count;
+    
+        function update(t: any) {
+            for (let i = 0; i < len; i += 1) {
+                p.fromBufferAttribute(pos, i).normalize();
+                v3.copy(p).multiplyScalar(3.0);
+                let ns = noise.noise(v3.x + Math.cos(t), v3.y + Math.sin(t), v3.z + t);
+                v3.copy(p)
+                    .setLength(radius)
+                    .addScaledVector(p, ns * 0.4);
+                pos.setXYZ(i, v3.x, v3.y, v3.z);
+            }
+            pos.needsUpdate = true;
+        }
+        mesh.userData.update = update;
+        return mesh;
+    }
+
+
     camera.position.set(0, 0, 500);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -15,10 +52,53 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
     div.appendChild(renderer.domElement);
     
     // adding mesh for sphere planet
-    const geometry = new THREE.SphereGeometry( 100, 100, 100 ); 
-    const material = new THREE.MeshPhysicalMaterial({color: 0xCBC3E3, roughness: 0.5});
+    
+    const geometry = new THREE.IcosahedronGeometry(1, 6);
+    const material = new THREE.MeshStandardMaterial({
+        emissive: 0x5D3FD3,
+    });
     const sphere = new THREE.Mesh( geometry, material); 
     sphere.castShadow = true;
+
+    const sunRimMat = getFresnelMat({ rimHex: 0xffffff, facingHex: 0x000000 });
+    const rimMesh = new THREE.Mesh(geometry, sunRimMat);
+    sphere.scale.setScalar(50);
+    rimMesh.scale.setScalar(1.01);
+    sphere.add(rimMesh);
+
+    const coronaMesh = getCorona();
+    sphere.add(coronaMesh);
+
+    sphere.userData.update = (t: number) => {
+        // sphere.rotation.y = t;
+        coronaMesh.userData.update(t);
+    };
+
+
+
+    /**
+     * 
+     *  const sunMat = new THREE.MeshStandardMaterial({
+        emissive: 0xff0000,
+    });
+    const geo = new THREE.IcosahedronGeometry(1, 6);
+    const sun = new THREE.Mesh(geo, sunMat);
+
+    const sunRimMat = getFresnelMat({ rimHex: 0xffff99, facingHex: 0x000000 });
+    const rimMesh = new THREE.Mesh(geo, sunRimMat);
+    rimMesh.scale.setScalar(1.01);
+    sun.add(rimMesh);
+
+    const coronaMesh = getCorona();
+    sun.add(coronaMesh);
+
+    const sunLight = new THREE.PointLight(0xffff99, 10);
+    sun.add(sunLight);
+    sun.userData.update = (t) => {
+        sun.rotation.y = t;
+        coronaMesh.userData.update(t);
+    };
+     */
 
     /**
      * SPHERE POSITION IS 10,10,10
@@ -73,24 +153,23 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
      * 
      * ADDING ROBOT THROUGH FBX LOADER
      */
+
+    const robotGroup = new THREE.Group(); // Create a parent group
+    robotGroup.position.set(100, 10, 100); // Fix this position in the world
+    scene.add(robotGroup); // Add to scene
+    
     const fbxLoader = new FBXLoader();
     fbxLoader.load('Robot.fbx', (object) => {
-        object.position.set(2000, 2000,2000);
-        object.scale.set(50, 50, 50);
-        scene.add(object);
+        object.scale.set(50, 50, 50); // Scale as needed
+        robotGroup.add(object); // Add robot to parent group instead of directly to the scene
     
-        // set the Animation Mixer
         mixer = new THREE.AnimationMixer(object);
-    
-        // Loop through animations and store them
         object.animations.forEach((clip) => {
             const action = mixer!.clipAction(clip);
             animationActions.push(action);
         });
     
-        // Play the first animation
         if (animationActions.length > 0) {
-            console.log(object.position)
             activeAction = animationActions[0];
             activeAction.play();
         }
@@ -156,6 +235,7 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
     
         const delta = clock.getDelta(); // Get time elapsed since last frame
         if (mixer) mixer.update(delta); // Update animation
+        sphere.userData.update(clock.elapsedTime)
     
         renderer.render(scene, camera);
     };
