@@ -12,6 +12,7 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 
     // Orbit controls - not really sure what this will be doing but
     const controls = new OrbitControls(camera, renderer.domElement);
+    controls.minDistance = 50;
     controls.addEventListener('change', () => renderer.render(scene, camera));
 
     /* Bug fix, ensure that users cannot exceed skybox dimension */
@@ -51,6 +52,14 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
     pointLight.position.set(50, 50, 50);
     scene.add(pointLight);
 
+    // function animate() {
+    //     requestAnimationFrame( animate );
+
+    //     sphere.rotation.x += 0.01;
+    //     sphere.rotation.y += 0.01;
+
+    //     renderer.render( scene, camera );
+    // };
 
     // ANIMATION LOOP
     const animate = () => {
@@ -64,6 +73,7 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
     const geometry = new THREE.SphereGeometry( 15, 32, 16 ); 
     const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
     const sphere = new THREE.Mesh( geometry, material ); 
+    
     sphere.minDistance = 30; 
     sphere.maxDistance = 50; 
     scene.add( sphere );

@@ -4,10 +4,8 @@ import { hydrate } from '@/util/hydrated';
 import { ToastType, createToast } from '@/util/toasts';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import Terrarium from './Terrarium';
 import TerrariumTwo from './TerrariumTwo';
 import { ThreeProvider } from './ThreeContext';
-import ThreeEnvironment from './ThreeEnvironment';
 import init from '@/three/init';
 
 export default function Client() {
