@@ -1,76 +1,76 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
 
 interface LangflowResponse {
-  outputs?: {
-    outputs?: {
-      results?: {
-        message?: {
-          text?: string;
-        };
-      };
-    }[];
-  }[];
+	outputs?: {
+		outputs?: {
+			results?: {
+				message?: {
+					text?: string;
+				};
+			};
+		}[];
+	}[];
 }
 
 export function GET(req: NextRequest) {
-    return NextResponse.json({ message: "USE POST NOT GET FUCKWIT!" });
+	return NextResponse.json({ message: 'USE POST NOT GET FUCKWIT!' });
 }
 
 // 🚀 Export named POST function for Next.js App Router
 export async function POST(req: NextRequest) {
-  try {
-    const body = await req.json();
-    const { userProfile } = body;
-    console.log(userProfile)
+	try {
+		const body = await req.json();
+		const { userProfile } = body;
+		console.log(userProfile);
 
-    // if (!userProfile || typeof userProfile !== "string") {
-    //   return NextResponse.json({ error: "Missing or invalid userProfile input." }, { status: 400 });
-    // }
+		// if (!userProfile || typeof userProfile !== "string") {
+		//   return NextResponse.json({ error: "Missing or invalid userProfile input." }, { status: 400 });
+		// }
 
-    // ✅ Ensure API Key is set in .env
-    const API_KEY = process.env.langflowAPI;
+		// ✅ Ensure API Key is set in .env
+		const API_KEY = process.env.langflowAPI;
 
-    // ✅ Correct Langflow API execution URL
-    const API_URL = "https://api.langflow.astra.datastax.com/lf/e0bbfb5f-0270-4bb5-b347-3b2e5bdc2256/api/v1/run/dbc47ff2-6f38-48ad-ad99-4a85a215c41f?stream=false";
+		// ✅ Correct Langflow API execution URL
+		const API_URL =
+			'https://api.langflow.astra.datastax.com/lf/e0bbfb5f-0270-4bb5-b347-3b2e5bdc2256/api/v1/run/dbc47ff2-6f38-48ad-ad99-4a85a215c41f?stream=false';
 
-    // ✅ Make request to Langflow Astra API
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${API_KEY}`,
-      },
-      body: JSON.stringify({
-        inputs: {
-          "ChatInput-AKYm6": "how can I improve my sleep",
-        },
-      }),
-    });
-    console.log(response)
+		// ✅ Make request to Langflow Astra API
+		const response = await fetch(API_URL, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${API_KEY}`
+			},
+			body: JSON.stringify({
+				inputs: {
+					'ChatInput-AKYm6': 'how can I improve my sleep'
+				}
+			})
+		});
+		console.log(response);
 
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      console.error("❌ Langflow API Error:", errorMessage);
-      throw new Error(`Langflow API error: ${response.status} - ${errorMessage}`);
-    }
+		if (!response.ok) {
+			const errorMessage = await response.text();
+			console.error('❌ Langflow API Error:', errorMessage);
+			throw new Error(`Langflow API error: ${response.status} - ${errorMessage}`);
+		}
 
-    const data: LangflowResponse = await response.json();
-    console.log("✅ Langflow API Response:", JSON.stringify(data, null, 2));
+		const data: LangflowResponse = await response.json();
+		console.log('✅ Langflow API Response:', JSON.stringify(data, null, 2));
 
-    // ✅ Extract the valid JSON from the response
-    const rawMessage = data.outputs?.[0]?.outputs?.[0]?.results?.message?.text;
+		// ✅ Extract the valid JSON from the response
+		const rawMessage = data.outputs?.[0]?.outputs?.[0]?.results?.message?.text;
 
-    if (!rawMessage) {
-      throw new Error("❌ Invalid response structure from Langflow API.");
-    }
+		if (!rawMessage) {
+			throw new Error('❌ Invalid response structure from Langflow API.');
+		}
 
-    // ✅ Convert string JSON to a valid object
-    const parsedMessage = JSON.parse(rawMessage);
+		// ✅ Convert string JSON to a valid object
+		const parsedMessage = JSON.parse(rawMessage);
 
-    return NextResponse.json({ success: true, tasks: parsedMessage.tasks });
-
-  } catch (error) {
-    console.error("❌ API Error:", error);
-    return NextResponse.json({ error: (error as Error).message }, { status: 500 });
-  }
+		return NextResponse.json({ success: true, tasks: parsedMessage.tasks });
+	} catch (error) {
+		console.error('❌ API Error:', error);
+		return NextResponse.json({ error: (error as Error).message }, { status: 500 });
+	}
 }
