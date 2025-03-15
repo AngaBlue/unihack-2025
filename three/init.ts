@@ -75,8 +75,8 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
      */
     const fbxLoader = new FBXLoader();
     fbxLoader.load('Robot.fbx', (object) => {
-        object.position.set(200, 200,200);
-        object.scale.set(30, 30, 30);
+        object.position.set(2000, 2000,2000);
+        object.scale.set(50, 50, 50);
         scene.add(object);
     
         // set the Animation Mixer
@@ -156,7 +156,6 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
     
         const delta = clock.getDelta(); // Get time elapsed since last frame
         if (mixer) mixer.update(delta); // Update animation
-        console.log(robot)
     
         renderer.render(scene, camera);
     };
