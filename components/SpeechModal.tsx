@@ -1,5 +1,5 @@
 'use client';
-import { useGoalContext } from '@/app/GoalContext';
+import { useGoalContext } from '@/context/GoalContext';
 import queryAI from '@/util/queryAI';
 import Image from 'next/image';
 import { type FormEventHandler, type ReactElement, useState } from 'react';
@@ -71,6 +71,7 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 		}
 	};
 
+	// biome-ignore lint/correctness/noUnusedVariables: <explanation>
 	async function getSkills() {
 		const { tasks } = await queryAI(goal);
 		setSkillTree(tasks);
