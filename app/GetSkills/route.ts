@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
 		// ✅ Convert string JSON to a valid object
 		const parsedMessage = JSON.parse(rawMessage);
 		console.log(parsedMessage);
-		return NextResponse.json({ success: true, motivationalMessage: parsedMessage['motivational message'], tasks: parsedMessage.tasks });
+		return NextResponse.json({ success: true, motivationalMessage: parsedMessage['motivational_messages'], tasks: parsedMessage.tasks });
 	} catch (error) {
 		console.error('❌ API Error:', error);
 		return NextResponse.json({ error: (error as Error).message }, { status: 500 });
