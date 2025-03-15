@@ -1,5 +1,5 @@
 'use client';
-import { useGoalContext } from '@/app/GoalContext';
+import { useGoalContext } from '@/context/GoalContext';
 import queryAI from '@/util/queryAI';
 import Image from 'next/image';
 import { type FormEventHandler, type ReactElement, useState } from 'react';
@@ -90,7 +90,7 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 			{(isLoading || index < speechChain.length) && (
 				<div className='absolute left-10 right-10 bottom-10 top-10 p-5 bg-transparent rounded-lg'>
 					<div>
-						<Image className='absolute -right-2 -bottom-2 rounded-full' src='/mascot.png' alt='placeholder' width={100} height={100} />
+						<Image className='absolute -right-2 -bottom-2 rounded-full' src='/icon.png' alt='placeholder' width={100} height={100} />
 					</div>
 					{/* SPEECH BUBBLE ELEMENT */}
 					<div className='relative bg-background/95 rounded-lg h-3/4 top-5 border-6 border-highlight flex flex-col justify-center items-center'>
