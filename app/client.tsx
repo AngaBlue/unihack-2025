@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { ThreeProvider } from './ThreeContext';
 import ToastWrapper from './components/ToastWrapper';
+import BackgroundMusic from './components/BackgroundMusic';
 
 export default function Client() {
 	const [scene, setScene] = useState<THREE.Scene | null>(null);
@@ -45,6 +46,7 @@ export default function Client() {
 
 	return (
 		<ThreeProvider scene={scene} camera={camera}>
+			<BackgroundMusic />
 			<SpeechModal speechChain={speechChain} />
 			<ToastWrapper />
 			<div ref={ref} />
