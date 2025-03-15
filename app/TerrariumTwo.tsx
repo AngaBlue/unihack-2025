@@ -12,7 +12,6 @@ const TerrariumTwo = () => {
 		mtlLoader.setPath('/');
 		mtlLoader.load('mushrooms.mtl', materials => {
 			materials.preload();
-
 			const objLoader = new OBJLoader();
 			objLoader.setMaterials(materials);
 			objLoader.setPath('/');
@@ -24,7 +23,7 @@ const TerrariumTwo = () => {
 		});
 
 		return () => {};
-	}, [scene]);
+	}, []);
 
 	const animate = () => {
 		requestAnimationFrame(animate);
