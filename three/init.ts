@@ -16,12 +16,11 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	const renderer = new THREE.WebGLRenderer({ antialias: true });
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	div.appendChild(renderer.domElement);
-	
 
 	function getCorona() {
 		const radius = 0.85;
 		const material = new THREE.MeshBasicMaterial({
-			color: 0xD8F5DD,
+			color: 0x186b16,
 			side: THREE.BackSide
 		});
 		const geo = new THREE.IcosahedronGeometry(radius, 6);
@@ -63,12 +62,13 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
     const surfaceMargin = 5;
 	const geometry = new THREE.IcosahedronGeometry(1, 6);
 	const material = new THREE.MeshStandardMaterial({
-		emissive: 0x3CAE63
+		emissive: 0x20991c 
 	});
 	const planet = new THREE.Mesh(geometry, material);
 	planet.castShadow = true;
 
 	const sunRimMat = getFresnelMat({ rimHex: 0x000000, facingHex: 0x000000 });
+	
 	const rimMesh = new THREE.Mesh(geometry, sunRimMat);
 	planet.scale.setScalar(planetRadius);
 	rimMesh.scale.setScalar(1.001);
@@ -143,12 +143,13 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 
 			// If the child is a Mesh, recenter its geometry.
 			if (child instanceof THREE.Mesh && child.geometry) {
-			  child.geometry.center();
-			}
-			
-			child.position.set(30, 30, 30);
+				child.geometry.center();
+		  }
+			  
 
-			child.scale.set(SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR);
+			child.position.set(30, 30, 30);
+		
+			child.scale.set(SCALE_FACTOR, SCALE_FACTOR,SCALE_FACTOR);
 			
 			scene.add(child);
 			mushrooms.push(child);
@@ -163,7 +164,9 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 		  mushrooms.push(object);
 		}
 		console.log('Mushrooms loaded:', mushrooms);
-	  });
+	  }
+	
+	);
 	});
 
 
@@ -179,7 +182,14 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	function dragStartCallback(event: any) {
 		controls.enabled = false; 
 		startColor = event.object.material.color.getHex();
-		event.object.material.color.setHex(0x000000);
+		if(event.object.material.color){
+			event.object.material.color.setHex(0x000000);
+		}
+		// remove the bright light if one exists
+		if (event.object.userData.brightLight) {
+			event.object.remove(event.object.userData.brightLight);
+			event.object.userData.brightLight = null;
+		}
 	}
 
 	function dragCallback(event:any) {
@@ -188,7 +198,9 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 
 	function dragEndCallback(event: any) {
 		controls.enabled = true;
-		event.object.material.color.setHex(startColor);
+		if(event.object.material.color){
+			event.object.material.color.setHex(startColor);
+		}
 	  
 		const mushroom = event.object
 
@@ -208,19 +220,27 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 		mushroom.lookAt(mushroom.position.clone().add(direction));
 		mushroom.rotateX(Math.PI / 2);
 		console.log('new distance',mushroom.position.length());
+
+		/**
+		 * Add per object lighting
+		 */
+		const brightLight = new THREE.PointLight(0xff0099 , 50, 100);
+		brightLight.position.set(0, 0, 0);
+		mushroom.add(brightLight);
+		mushroom.userData.brightLight = brightLight;
 	  }
 
 
 	/**
      * Add directional and ambient lighting 
      */
-	const directionalLight = new THREE.DirectionalLight(0xe8b5bd, 0.8);
+	const directionalLight = new THREE.DirectionalLight(0xfbeee6, 1.5);//0xe8b5bd
 	directionalLight.position.set(100, 100, 100).normalize();
 	directionalLight.target = planet;
 	scene.add(directionalLight);
 
-	const ambientLight = new THREE.AmbientLight(0x000000, 0.00005);
-	ambientLight.position.set(-100, 100, -100);
+	const ambientLight = new THREE.AmbientLight(0xfbeee6  , 0.5);
+	ambientLight.position.set(100, 100, 100);
 
 	scene.add(ambientLight);
 
