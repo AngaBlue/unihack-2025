@@ -15,7 +15,12 @@ async function queryAI(userInformation: string) {
                 throw new Error("Failed to fetch skills");
             }
 
-            const data = await res.json();
+            const data  = await res.json();
+            for (const property in data){ 
+                console.log(`${property} = ${data[property]}`); 
+            } 
+            
+            console.log(`Data = ${data}`)
             return data;
             
         } catch (error) {

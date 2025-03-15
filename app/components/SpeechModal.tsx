@@ -20,10 +20,6 @@ enum ValueToChange {
 	GOAL = 2
 }
 
-
-
-
-
 // Requires Next Modal to be set up first.
 /**
  * If nextModal is set, a button will be displayed to move to the next modal.
@@ -61,13 +57,15 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 		setIndex(index + 1);
 		setInput('');
 		document.getElementById('replyInput')?.setAttribute('value', ''); // speechChain[index].userInput);
-		console.log(`Goal: ${goal}, Name: ${name}, Index ${index} `);
+		console.log(`Goal: ${goal}, Name: ${name}, Index ${index}`);
 		
-		if (index >= speechChain.length){
-			const { success, tasks, motivationals } = await queryAI(goal);
+		if (index >= speechChain.length -1){
+			const { tasks } = await queryAI(goal);
 			
 			setSkillTree(tasks);
-			console.log(skillTree);
+			console.log(`tasks[0] = ${tasks[0]}`);
+			console.log(`skillTree = ${skillTree}`)
+			console.log(`shit = ${tasks}`);
 			// TODO set Motivationals
 		}
 	};
@@ -82,14 +80,14 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 					{/* SPEECH BUBBLE ELEMENT */}
 					<div className='relative bg-background/95 rounded-lg h-3/4 top-5 border-6 border-highlight'>
 						<p className='p-10 text-center align-middle'>{speechChain[index].text}</p>
-						
+
 						<div
 							className='absolute w-0 h-0
 							border-l-[64px] border-l-transparent
 							border-t-[60px] border-t-highlight
 							border-r-[9px] border-r-transparent
 							right-13 top-1/1'
-							/>
+						/>
 						<div
 							className='absolute w-0 h-0 
 							border-l-[50px] border-l-transparent
@@ -105,7 +103,7 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 									id='replyInput'
 									type='text'
 									placeholder={speechChain[index].inputInstruction}
-									className='p-5 m-5 rounded-lg text-foreground'
+									className='p-5 m-5 rounded-lg text-foreground w-full'
 									onChange={e => setInput(e.target.value)}
 									value={input}
 								/>
@@ -114,7 +112,7 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 							{/* Next Button / Close button / Submit Button*/}
 							<button type='submit' className='absolute right-10 bottom-10 p-5 bg-highlight/100 rounded-lg'>
 								{/* Close button if this is the last item */}
-								{index < speechChain.length - 1 ? 'Next →' : 'Close X'}
+								{index < speechChain.length ? 'Next →' : 'Close X'}
 							</button>
 						</form>
 					</div>
@@ -139,7 +137,6 @@ export const speechChain: ModalProps[] = [
 		text: 'Awesome, I think I can help you with that. What is your name?',
 		inputInstruction: 'Your Name:',
 		changeValue: ValueToChange.NAME
-
 	},
 	{
 		text: 'Nice to meet you, xxxx! I am your guide, Growth Garden. I will help you reach your goal.',
