@@ -1,4 +1,3 @@
-import { RefObject } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three-stdlib';
 import { MTLLoader } from 'three-stdlib';
@@ -6,7 +5,6 @@ import { OBJLoader } from 'three-stdlib';
 
 
 export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera, div: HTMLDivElement) {
-    
     camera.position.set(0, 0, 500);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });

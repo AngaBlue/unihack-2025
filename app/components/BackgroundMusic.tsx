@@ -11,7 +11,6 @@ export default function BackgroundMusic() {
 		};
 
 		document.addEventListener('click', playAudio, { once: true });
-		audioRef.current.play().catch(error => console.error('Audio play failed', error));
 		return () => {
 			document.removeEventListener('click', playAudio);
 			audioRef.current?.pause();
