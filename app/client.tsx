@@ -4,12 +4,11 @@ import { hydrate } from '@/util/hydrated';
 import { ToastType, createToast } from '@/util/toasts';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { GoalProvider } from './GoalContext';
 import { ThreeProvider } from './ThreeContext';
 import BackgroundMusic from './components/BackgroundMusic';
-import ToastWrapper from './components/ToastWrapper';
 import { SpeechModal, speechChain } from './components/SpeechModal';
-import { GoalProvider } from './GoalContext';
-
+import ToastWrapper from './components/ToastWrapper';
 
 export default function Client() {
 	const [scene, setScene] = useState<THREE.Scene | null>(null);

@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 	try {
 		const body = await req.json();
 		const { userProfile, mode } = body;
-		console.log(`mode: ${mode}, user profile: ${userProfile}`)
+		console.log(`mode: ${mode}, user profile: ${userProfile}`);
 		// console.log(`mode: ${mode}, user profile: ${userProfile}`)
 		// if (!userProfile || typeof userProfile !== "string") {
 		//   return NextResponse.json({ error: "Missing or invalid userProfile input." }, { status: 400 });
@@ -92,5 +92,5 @@ export async function POST(req: NextRequest) {
 	}
 }
 
-export const runtime = "nodejs";
+export const runtime = 'nodejs';
 export const maxDuration = 60;

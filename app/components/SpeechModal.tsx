@@ -1,8 +1,8 @@
 'use client';
-import Image from 'next/image';
-import { type FormEventHandler, type ReactElement, useState } from 'react';
 import { useGoalContext } from '@/app/GoalContext';
 import queryAI from '@/util/queryAI';
+import Image from 'next/image';
+import { type FormEventHandler, type ReactElement, useState } from 'react';
 import { FaSpinner } from 'react-icons/fa';
 
 export interface ModalChainProps {
@@ -12,7 +12,7 @@ export interface ModalChainProps {
 export interface ModalProps {
 	text: string;
 	inputInstruction?: string;
-	changeValue:ValueToChange;
+	changeValue: ValueToChange;
 }
 
 enum ValueToChange {
@@ -37,7 +37,6 @@ enum ValueToChange {
  * @returns
  */
 export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | null {
-	
 	const { name, setName } = useGoalContext();
 	const { goal, setGoal } = useGoalContext();
 	const { skillTree, setSkillTree } = useGoalContext();
@@ -46,22 +45,24 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 	const [input, setInput] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 
-	
-
-	const handleFormSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+	const handleFormSubmit: FormEventHandler<HTMLFormElement> = async e => {
 		e.preventDefault();
-		if (index < speechChain.length && speechChain[index].inputInstruction){
+		if (index < speechChain.length && speechChain[index].inputInstruction) {
 			switch (speechChain[index].changeValue) {
-				case (ValueToChange.GOAL) : setGoal(input); break;
-				case (ValueToChange.NAME) : setName(input); break;
+				case ValueToChange.GOAL:
+					setGoal(input);
+					break;
+				case ValueToChange.NAME:
+					setName(input);
+					break;
 			}
 		}
 		setIndex(index + 1);
 		setInput('');
 		document.getElementById('replyInput')?.setAttribute('value', ''); // speechChain[index].userInput);
 		console.log(`Goal: ${goal}, Name: ${name}, Index ${index}`);
-		
-		if (index >= speechChain.length -1){
+
+		if (index >= speechChain.length - 1) {
 			setIsLoading(true);
 			const { tasks } = await queryAI(goal);
 			setIsLoading(false);
@@ -69,7 +70,8 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 			console.log(skillTree);
 		}
 	};
-	async function getskills(){
+
+	async function getSkills() {
 		const { tasks } = await queryAI(goal);
 		setSkillTree(tasks);
 	}
@@ -77,61 +79,57 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 	return (
 		<div className='text-foreground text-xl'>
 			{(isLoading || index < speechChain.length) && (
-				<div className='absolute left-10 right-10 bottom-10 top-10 p-5 bg-tansparent rounded-lg'>
+				<div className='absolute left-10 right-10 bottom-10 top-10 p-5 bg-transparent rounded-lg'>
 					<div>
 						<Image className='absolute -right-2 -bottom-2 rounded-full' src='/mascot.png' alt='placeholder' width={100} height={100} />
 					</div>
 					{/* SPEECH BUBBLE ELEMENT */}
-					<div className="relative bg-background/95 rounded-lg h-3/4 top-5 border-6 border-highlight flex flex-col justify-center items-center">
-					<p className="p-10 text-center">
-						{isLoading ? "Loading" : speechChain[index].text}
-					</p>
-					{isLoading ? (
-						<div className="flex justify-center items-center w-full h-full">
-						<FaSpinner className='animate-spin h-8 w-8 text-foreground' />
-						</div>
-					) : null}
-					<div
-						className="absolute w-0 h-0
+					<div className='relative bg-background/95 rounded-lg h-3/4 top-5 border-6 border-highlight flex flex-col justify-center items-center'>
+						<p className='p-10 text-center'>{isLoading ? 'Loading' : speechChain[index].text}</p>
+						{isLoading ? (
+							<div className='flex justify-center items-center w-full h-full'>
+								<FaSpinner className='animate-spin h-8 w-8 text-foreground' />
+							</div>
+						) : null}
+						<div
+							className='absolute w-0 h-0
 								border-l-[64px] border-l-transparent
 								border-t-[60px] border-t-highlight
 								border-r-[9px] border-r-transparent
-								right-13 top-1/1"
-					/>
-					<div
-						className="absolute w-0 h-0 
+								right-13 top-1/1'
+						/>
+						<div
+							className='absolute w-0 h-0 
 								border-l-[50px] border-l-transparent
 								border-t-[50px] border-t-background
 								border-r-[5px] border-r-transparent
-								right-15 top-1/1"
-					/>
-
-					{/* Input Element */}
-					<form onSubmit={handleFormSubmit} className='w-full flex align-middle justify-center'>
-						{(!isLoading && index < speechChain.length && speechChain[index].inputInstruction) && (
-						<input
-							id="replyInput"
-							type="text"
-							placeholder={speechChain[index].inputInstruction}
-							className="w-3/4 p-5 m-5 rounded-lg text-foreground border-2 border-highlight"
-							onChange={e => setInput(e.target.value)}
-							value={input}
+								right-15 top-1/1'
 						/>
-						)}
 
-						{/* Next Button / Close button / Submit Button */}
-						<button type="submit" className="absolute right-10 bottom-10 p-5 bg-highlight/100 rounded-lg">
-						{isLoading ? null : (index < speechChain.length ? 'Next →' : 'Close X')}
-						</button>
-					</form>
+						{/* Input Element */}
+						<form onSubmit={handleFormSubmit} className='w-full flex align-middle justify-center'>
+							{!isLoading && index < speechChain.length && speechChain[index].inputInstruction && (
+								<input
+									id='replyInput'
+									type='text'
+									placeholder={speechChain[index].inputInstruction}
+									className='w-3/4 p-5 m-5 rounded-lg text-foreground border-2 border-highlight'
+									onChange={e => setInput(e.target.value)}
+									value={input}
+								/>
+							)}
+
+							{/* Next Button / Close button / Submit Button */}
+							<button type='submit' className='absolute right-10 bottom-10 p-5 bg-highlight/100 rounded-lg'>
+								{isLoading ? null : index < speechChain.length ? 'Next →' : 'Close X'}
+							</button>
+						</form>
 					</div>
-
 				</div>
 			)}
 		</div>
 	);
 }
-
 
 export const speechChain: ModalProps[] = [
 	{

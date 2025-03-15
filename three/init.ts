@@ -12,7 +12,7 @@ const SCALE_FACTOR = 10;
 var startColor: any;
 export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera, div: HTMLDivElement) {
 	camera.position.set(0, 0, 500);
-	
+
 	const renderer = new THREE.WebGLRenderer({ antialias: true });
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	div.appendChild(renderer.domElement);
@@ -56,19 +56,19 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	div.appendChild(renderer.domElement);
 
 	/**
-     * Add planet
-     */
+	 * Add planet
+	 */
 	const planetRadius = 50;
-    const surfaceMargin = 5;
+	const surfaceMargin = 5;
 	const geometry = new THREE.IcosahedronGeometry(1, 6);
 	const material = new THREE.MeshStandardMaterial({
-		emissive: 0x20991c 
+		emissive: 0x20991c
 	});
 	const planet = new THREE.Mesh(geometry, material);
 	planet.castShadow = true;
 
 	const sunRimMat = getFresnelMat({ rimHex: 0x000000, facingHex: 0x000000 });
-	
+
 	const rimMesh = new THREE.Mesh(geometry, sunRimMat);
 	planet.scale.setScalar(planetRadius);
 	rimMesh.scale.setScalar(1.001);
@@ -82,21 +82,19 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	};
 	planet.position.set(0, 0, 0);
 
+	/**
+	 * Initialise orbit controls for panning camera around the plannet
+	 */
+	const controls = new OrbitControls(camera, renderer.domElement);
+	controls.target.copy(planet.position);
+	controls.addEventListener('change', () => renderer.render(scene, camera));
+	controls.minDistance = 100;
+	controls.maxDistance = 1500;
 
-    /**
-     * Initialise orbit controls for panning camera around the plannet 
-     */
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.target.copy(planet.position);
-    controls.addEventListener('change', () => renderer.render(scene, camera));
-    controls.minDistance = 100;
-    controls.maxDistance = 1500;
-
-    /**
-     * Add skybox background
-     */
+	/**
+	 * Add skybox background
+	 */
 	scene.add(createSkybox());
-
 
 	/**
 	 * Add robot
@@ -123,54 +121,51 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	});
 
 	/**
-	 * Add planetObjects 
+	 * Add planetObjects
 	 */
 	var planetObjects: THREE.Object3D[] = [];
 	const mtlLoader = new MTLLoader();
 	mtlLoader.setPath('/');
 	mtlLoader.load('mushrooms.mtl', materials => {
-	  materials.preload();
-	  const objLoader = new OBJLoader();
-	  objLoader.setMaterials(materials);
-	  objLoader.setPath('/');       
+		materials.preload();
+		const objLoader = new OBJLoader();
+		objLoader.setMaterials(materials);
+		objLoader.setPath('/');
 
-	  objLoader.load('mushrooms.obj', (object: any) => {
-		if (object instanceof THREE.Group) {
-		  object.updateWorldMatrix(true, true);
-		  
-		  object.children.forEach(child => {
-			object.remove(child);            
+		objLoader.load('mushrooms.obj', (object: any) => {
+			if (object instanceof THREE.Group) {
+				object.updateWorldMatrix(true, true);
 
-			// If the child is a Mesh, recenter its geometry.
-			if (child instanceof THREE.Mesh && child.geometry) {
-				child.geometry.center();
-		  }
+				object.children.forEach(child => {
+					object.remove(child);
 
-			child.position.set(30, 30, 30);
-		
-			child.scale.set(SCALE_FACTOR, SCALE_FACTOR,SCALE_FACTOR);
-			
-			scene.add(child);
-			planetObjects.push(child);
-		  });
-		} else {
-		  if (object instanceof THREE.Mesh && object.geometry) {
-			object.geometry.center();
-		  }
-		  object.position.set(55, 55, 55);
-		  object.scale.set(SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR);
-		  planet.add(object);
-		  planetObjects.push(object);
-		}
-		console.log('planetObjects loaded:', planetObjects);
-	  }
-	
-	);
+					// If the child is a Mesh, recenter its geometry.
+					if (child instanceof THREE.Mesh && child.geometry) {
+						child.geometry.center();
+					}
+
+					child.position.set(30, 30, 30);
+
+					child.scale.set(SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR);
+
+					scene.add(child);
+					planetObjects.push(child);
+				});
+			} else {
+				if (object instanceof THREE.Mesh && object.geometry) {
+					object.geometry.center();
+				}
+				object.position.set(55, 55, 55);
+				object.scale.set(SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR);
+				planet.add(object);
+				planetObjects.push(object);
+			}
+			console.log('planetObjects loaded:', planetObjects);
+		});
 	});
 
-
 	/**
-	 * Adding drag controls for planetObjects 
+	 * Adding drag controls for planetObjects
 	 */
 	const dragControls = new DragControls(planetObjects, camera, renderer.domElement);
 
@@ -179,9 +174,9 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	dragControls.addEventListener('drag', dragCallback);
 
 	function dragStartCallback(event: any) {
-		controls.enabled = false; 
+		controls.enabled = false;
 		startColor = event.object.material.color.getHex();
-		if(event.object.material.color){
+		if (event.object.material.color) {
 			event.object.material.color.setHex(0x000000);
 		}
 		// remove the bright light if one exists
@@ -191,54 +186,62 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 		}
 	}
 
-	function dragCallback(event:any) {
-		controls.enabled = false; 
+	function dragCallback(event: any) {
+		controls.enabled = false;
 	}
 
 	function dragEndCallback(event: any) {
 		controls.enabled = true;
-		if(event.object.material.color){
+		if (event.object.material.color) {
 			event.object.material.color.setHex(startColor);
 		}
-	  
-		const mushroom = event.object
+
+		const mushroom = event.object;
 
 		// const currentDistance = Math.abs(mushroom.position.length())
 		const targetDistance = planetRadius;
-		console.log('currentDistance', mushroom.position, 'targetDistance', targetDistance, 'planet position', planet.position, 'mushroom local position', mushroom.position);
+		console.log(
+			'currentDistance',
+			mushroom.position,
+			'targetDistance',
+			targetDistance,
+			'planet position',
+			planet.position,
+			'mushroom local position',
+			mushroom.position
+		);
 
 		// calculate the normalized direction from the planet's center to the mushroom.
 		const direction = mushroom.position.clone().normalize();
-		  
+
 		// scale direction by targetDistance
-		mushroom.position.copy(direction.multiplyScalar(planetRadius+surfaceMargin));
-		console.log('mushroom position', mushroom.position)
-		  
+		mushroom.position.copy(direction.multiplyScalar(planetRadius + surfaceMargin));
+		console.log('mushroom position', mushroom.position);
+
 		// Update the mushroom's orientation so it faces outward from the planet.
 		mushroom.up.copy(direction);
 		mushroom.lookAt(mushroom.position.clone().add(direction));
 		mushroom.rotateX(Math.PI / 2);
-		console.log('new distance',mushroom.position.length());
+		console.log('new distance', mushroom.position.length());
 
 		/**
 		 * Add per object lighting
 		 */
-		const brightLight = new THREE.PointLight(0xff0099 , 50, 100);
+		const brightLight = new THREE.PointLight(0xff0099, 50, 100);
 		brightLight.position.set(0, 0, 0);
 		mushroom.add(brightLight);
 		mushroom.userData.brightLight = brightLight;
-	  }
-
+	}
 
 	/**
-     * Add directional and ambient lighting 
-     */
-	const directionalLight = new THREE.DirectionalLight(0xfbeee6, 1.5);//0xe8b5bd
+	 * Add directional and ambient lighting
+	 */
+	const directionalLight = new THREE.DirectionalLight(0xfbeee6, 1.5); //0xe8b5bd
 	directionalLight.position.set(100, 100, 100).normalize();
 	directionalLight.target = planet;
 	scene.add(directionalLight);
 
-	const ambientLight = new THREE.AmbientLight(0xfbeee6  , 0.5);
+	const ambientLight = new THREE.AmbientLight(0xfbeee6, 0.5);
 	ambientLight.position.set(100, 100, 100);
 
 	scene.add(ambientLight);
@@ -247,7 +250,6 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	let activeAction: THREE.AnimationAction;
 	let mixer: THREE.AnimationMixer | null = null;
 
-
 	/**
 	 * Animation loop
 	 */
@@ -255,7 +257,7 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	const animate = () => {
 		requestAnimationFrame(animate);
 		const delta = clock.getDelta();
-		if (mixer) mixer.update(delta); 
+		if (mixer) mixer.update(delta);
 		planet.userData.update(clock.elapsedTime);
 		renderer.render(scene, camera);
 	};

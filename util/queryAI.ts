@@ -1,31 +1,29 @@
-
 async function queryAI(userInformation: string) {
-        try {
-            const res = await fetch("http://localhost:3000/GetSkills", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    userProfile: `How can I get better at: ${userInformation}`,
-                }),
-            });
+	try {
+		const res = await fetch('http://localhost:3000/GetSkills', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				userProfile: `How can I get better at: ${userInformation}`
+			})
+		});
 
-            if (!res.ok) {
-                throw new Error("Failed to fetch skills");
-            }
+		if (!res.ok) {
+			throw new Error('Failed to fetch skills');
+		}
 
-            const data  = await res.json();
-            for (const property in data){ 
-                console.log(`${property} = ${data[property]}`); 
-            } 
-            
-            console.log(`Data = ${data}`)
-            return data;
-            
-        } catch (error) {
-            console.error("Error fetching skills:", error);
-        }
-    }
+		const data = await res.json();
+		for (const property in data) {
+			console.log(`${property} = ${data[property]}`);
+		}
+
+		console.log(`Data = ${data}`);
+		return data;
+	} catch (error) {
+		console.error('Error fetching skills:', error);
+	}
+}
 
 export default queryAI;

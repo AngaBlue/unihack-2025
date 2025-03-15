@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import useSound from 'use-sound';
 
-const db = (x: number) => 10 ** (x / 10)
+const db = (x: number) => 10 ** (x / 10);
 
 const BASE_VOLUME = 0.3;
 const OWL_VOLUME = BASE_VOLUME * db(-5);
