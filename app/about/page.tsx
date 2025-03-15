@@ -2,7 +2,7 @@
 
 export default function AboutPage() {
 
-    async function getSkillsAPICall() {
+    async function getSkillsAPICall(userInformation: string) {
         try {
             const res = await fetch("http://localhost:3000/GetSkills", {
                 method: "POST",
@@ -10,15 +10,7 @@ export default function AboutPage() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    mode: "new",
-                    userProfile: "How can I get better at leetcode",
-                    oldTasks: [
-                        "Write down three things you're grateful for today 🌟",
-                        "Stretch for 5 minutes to release tension 💪",
-                        "Listen to your favorite song and dance for a mood boost 💃",
-                    ],
-                    oldUserProfile:
-                        "I've been feeling depressed, not sleeping well, wish I had a gf and more friends, how can I improve my life?",
+                    userProfile: `How can I get better at: ${userInformation}`,
                 }),
             });
 
@@ -38,9 +30,10 @@ export default function AboutPage() {
 
     return (
         <div>
+            {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
             <button
                 className="text-white bg-blue-500 p-2 rounded"
-                onClick={getSkillsAPICall}
+                onClick={()=>{getSkillsAPICall("leetcode")}}
             >
                 Get Skills
             </button>
