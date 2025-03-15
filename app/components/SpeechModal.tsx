@@ -39,7 +39,7 @@ enum ValueToChange {
 export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | null {
 	const { name, setName } = useGoalContext();
 	const { goal, setGoal } = useGoalContext();
-	const { skillTree, setSkillTree } = useGoalContext();
+	const { setSkillTree } = useGoalContext();
 
 	const [index, setIndex] = useState(0);
 	const [input, setInput] = useState('');
@@ -57,8 +57,7 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 					break;
 			}
 		}
-		setIndex(index + 1);
-		setInput('');
+		
 		document.getElementById('replyInput')?.setAttribute('value', ''); // speechChain[index].userInput);
 		console.log(`Goal: ${goal}, Name: ${name}, Index ${index}`);
 
@@ -67,14 +66,15 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 			const { tasks } = await queryAI(goal);
 			setIsLoading(false);
 			setSkillTree(tasks);
-			console.log(skillTree);
 		}
+		
+		setIndex(index + 1);
+		setInput('');
 	};
 
-	async function getSkills() {
-		const { tasks } = await queryAI(goal);
-		setSkillTree(tasks);
-	}
+
+	let message = (speechChain[index].text).replace(`{${ValueToChange.NAME}}`, name);
+	message = message.replace(`{${ValueToChange.GOAL}}`, goal);
 
 	return (
 		<div className='text-foreground text-xl'>
@@ -85,7 +85,7 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 					</div>
 					{/* SPEECH BUBBLE ELEMENT */}
 					<div className='relative bg-background/95 rounded-lg h-3/4 top-5 border-6 border-highlight flex flex-col justify-center items-center'>
-						<p className='p-10 text-center'>{isLoading ? 'Loading' : speechChain[index].text}</p>
+						<p className='p-10 text-center'>{isLoading ? 'Loading' : message}</p>
 						{isLoading ? (
 							<div className='flex justify-center items-center w-full h-full'>
 								<FaSpinner className='animate-spin h-8 w-8 text-foreground' />
@@ -147,7 +147,7 @@ export const speechChain: ModalProps[] = [
 		changeValue: ValueToChange.NAME
 	},
 	{
-		text: 'Nice to meet you, xxx! I am your guide, Growth Garden. I will help you reach your goal.',
+		text: `Nice to meet you, {${ValueToChange.NAME}}! I am your guide, Growth Garden. I will help you reach your goal.`,
 		changeValue: ValueToChange.NONE
 	},
 	{
