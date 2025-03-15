@@ -6,7 +6,7 @@ import { DragControls } from 'three-stdlib';
 import { FBXLoader } from 'three-stdlib';
 import { ImprovedNoise } from 'three-stdlib';
 import createSkybox from './createSkybox';
-import { getFresnelMat } from './getFresnelMat';
+import getFresnelMat from './getFresnelMat';
 
 interface DragEvent {
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
