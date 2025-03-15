@@ -7,8 +7,8 @@ import { ToastType, createToast } from '@/util/toasts';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { ThreeProvider } from './ThreeContext';
-import ToastWrapper from './components/ToastWrapper';
 import BackgroundMusic from './components/BackgroundMusic';
+import ToastWrapper from './components/ToastWrapper';
 
 export default function Client() {
 	const [scene, setScene] = useState<THREE.Scene | null>(null);

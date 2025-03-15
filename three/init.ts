@@ -9,10 +9,14 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	div.appendChild(renderer.domElement);
 
 	// adding mesh for sphere planet
-	const PLANET_POSITION = new THREE.Vector3(0, 0, 0);
 	const geometry = new THREE.SphereGeometry(100, 100, 100);
-	const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+	const material = new THREE.MeshPhysicalMaterial({ color: 0xcbc3e3, roughness: 0.5 });
 	const sphere = new THREE.Mesh(geometry, material);
+	sphere.castShadow = true;
+
+	/**
+	 * SPHERE POSITION IS 10,10,10
+	 */
 	sphere.position.set(10, 10, 10);
 
 	const controls = new OrbitControls(camera, renderer.domElement);
@@ -56,15 +60,6 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	const pointLight = new THREE.PointLight(0xffffff, 1, 1000);
 	pointLight.position.set(50, 50, 50);
 	scene.add(pointLight);
-
-	// function animate() {
-	//     requestAnimationFrame( animate );
-
-	//     sphere.rotation.x += 0.01;
-	//     sphere.rotation.y += 0.01;
-
-	//     renderer.render( scene, camera );
-	// };
 
 	// ANIMATION LOOP
 	const animate = () => {
