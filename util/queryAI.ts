@@ -1,8 +1,5 @@
-"use client";
 
-export default function AboutPage() {
-
-    async function queryAI(userInformation: string) {
+async function queryAI(userInformation: string) {
         try {
             const res = await fetch("http://localhost:3000/GetSkills", {
                 method: "POST",
@@ -26,15 +23,4 @@ export default function AboutPage() {
         }
     }
 
-    return (
-        <div>
-            {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
-            <button
-                className="text-white bg-blue-500 p-2 rounded"
-                onClick={async ()=>{console.log(await queryAI("GET ME A GIRLFRIEND"))}}
-            >
-                Get Skills
-            </button>
-        </div>
-    );
-}
+export default queryAI;
