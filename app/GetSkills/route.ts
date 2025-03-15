@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
 	try {
 		const body = await req.json();
 		const { userProfile, mode } = body;
+		console.log(`mode: ${mode}, user profile: ${userProfile}`)
 		// console.log(`mode: ${mode}, user profile: ${userProfile}`)
 		// if (!userProfile || typeof userProfile !== "string") {
 		//   return NextResponse.json({ error: "Missing or invalid userProfile input." }, { status: 400 });
@@ -84,12 +85,12 @@ export async function POST(req: NextRequest) {
 		// ✅ Convert string JSON to a valid object
 		const parsedMessage = JSON.parse(rawMessage);
 		console.log(parsedMessage);
-		return NextResponse.json({ success: true, motivationalMessage: parsedMessage['motivational message'], tasks: parsedMessage.tasks });
+		return NextResponse.json({ success: true, motivationalMessage: parsedMessage['motivational_messages'], tasks: parsedMessage.tasks });
 	} catch (error) {
 		console.error('❌ API Error:', error);
 		return NextResponse.json({ error: (error as Error).message }, { status: 500 });
 	}
 }
 
-export const runtime = 'nodejs';
-export const maxDuration = 30;
+export const runtime = "nodejs";
+export const maxDuration = 60;
