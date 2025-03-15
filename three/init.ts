@@ -5,16 +5,23 @@ import { OBJLoader } from 'three-stdlib';
 import { DragControls } from 'three-stdlib';
 import { FBXLoader } from 'three-stdlib';
 import { ImprovedNoise } from 'three-stdlib';
-import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 import createSkybox from './createSkybox';
 import { getFresnelMat } from './getFresnelMat';
 
+const SCALE_FACTOR = 10;
 var startColor: any;
 export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera, div: HTMLDivElement) {
+	camera.position.set(0, 0, 500);
+	
+	const renderer = new THREE.WebGLRenderer({ antialias: true });
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	div.appendChild(renderer.domElement);
+	
+
 	function getCorona() {
-		const radius = 0.9;
+		const radius = 0.85;
 		const material = new THREE.MeshBasicMaterial({
-			color: 0xffffff,
+			color: 0xD8F5DD,
 			side: THREE.BackSide
 		});
 		const geo = new THREE.IcosahedronGeometry(radius, 6);
@@ -46,72 +53,61 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 
 	camera.position.set(0, 0, 500);
 
-	const renderer = new THREE.WebGLRenderer({ antialias: true });
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	div.appendChild(renderer.domElement);
 
-	// adding mesh for sphere planet
-
+	/**
+     * Add planet
+     */
+	const planetRadius = 50;
+    const surfaceMargin = 5;
 	const geometry = new THREE.IcosahedronGeometry(1, 6);
 	const material = new THREE.MeshStandardMaterial({
-		emissive: 0x5d3fd3
+		emissive: 0x3CAE63
 	});
-	const sphere = new THREE.Mesh(geometry, material);
-	sphere.castShadow = true;
+	const planet = new THREE.Mesh(geometry, material);
+	planet.castShadow = true;
 
-	const sunRimMat = getFresnelMat({ rimHex: 0xffffff, facingHex: 0x000000 });
+	const sunRimMat = getFresnelMat({ rimHex: 0x000000, facingHex: 0x000000 });
 	const rimMesh = new THREE.Mesh(geometry, sunRimMat);
-	sphere.scale.setScalar(50);
-	rimMesh.scale.setScalar(1.01);
-	sphere.add(rimMesh);
+	planet.scale.setScalar(planetRadius);
+	rimMesh.scale.setScalar(1.001);
+	planet.add(rimMesh);
 
 	const coronaMesh = getCorona();
-	sphere.add(coronaMesh);
+	planet.add(coronaMesh);
 
-	sphere.userData.update = (t: number) => {
-		// sphere.rotation.y = t;
+	planet.userData.update = (t: number) => {
 		coronaMesh.userData.update(t);
 	};
+	planet.position.set(0, 0, 0);
 
-	/**
-	 * SPHERE POSITION IS 10,10,10
-	 */
-	sphere.position.set(0, 0, 0);
 
-	const controls = new OrbitControls(camera, renderer.domElement);
-	controls.target = sphere.position;
-	controls.addEventListener('change', () => renderer.render(scene, camera));
+    /**
+     * Initialise orbit controls for panning camera around the plannet 
+     */
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.target.copy(planet.position);
+    controls.addEventListener('change', () => renderer.render(scene, camera));
+    controls.minDistance = 100;
+    controls.maxDistance = 1500;
 
-	/* Bug fix, ensure that users cannot exceed skybox dimension */
-	controls.minDistance = sphere.position.getComponent(1) + 300;
-	controls.maxDistance = 1500;
+    /**
+     * Add skybox background
+     */
 	scene.add(createSkybox());
 
-	const directionalLight = new THREE.DirectionalLight(0xe8b5bd, 0.8);
-	directionalLight.position.set(100, 100, 100).normalize();
-	directionalLight.target = sphere;
-	scene.add(directionalLight);
 
-	const ambientLight = new THREE.AmbientLight(0xe8b5bd, 0.00005);
-	ambientLight.position.set(-100, 100, -100);
-
-	scene.add(ambientLight);
-
-	const animationActions: THREE.AnimationAction[] = [];
-	let activeAction: THREE.AnimationAction;
-	let mixer: THREE.AnimationMixer | null = null;
 	/**
-	 *
-	 * ADDING ROBOT THROUGH FBX LOADER
+	 * Add robot
 	 */
-
 	const robotGroup = new THREE.Group(); // Create a parent group
 	robotGroup.position.set(100, 10, 100); // Fix this position in the world
 	scene.add(robotGroup); // Add to scene
 
 	const fbxLoader = new FBXLoader();
 	fbxLoader.load('Robot.fbx', object => {
-		object.scale.set(50, 50, 50); // Scale as needed
+		object.scale.set(15, 15, 15); // Scale as needed
 		robotGroup.add(object); // Add robot to parent group instead of directly to the scene
 
 		mixer = new THREE.AnimationMixer(object);
@@ -127,63 +123,124 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	});
 
 	/**
-	 * adding mushroom
+	 * Add mushrooms 
 	 */
-	var objects: THREE.Group<THREE.Object3DEventMap>[] = [];
-
+	var mushrooms: THREE.Object3D[] = [];
 	const mtlLoader = new MTLLoader();
 	mtlLoader.setPath('/');
 	mtlLoader.load('mushrooms.mtl', materials => {
-		materials.preload();
-		const objLoader = new OBJLoader();
-		objLoader.setMaterials(materials);
-		objLoader.setPath('/');
-		objLoader.load('mushrooms.obj', object => {
-			object.position.set(50, 50, 50);
-			object.scale.set(10, 10, 10);
-			scene.add(object);
-			objects.push(object);
-		});
+	  materials.preload();
+	  const objLoader = new OBJLoader();
+	  objLoader.setMaterials(materials);
+	  objLoader.setPath('/');       
+
+	  objLoader.load('mushrooms.obj', (object: any) => {
+		if (object instanceof THREE.Group) {
+		  object.updateWorldMatrix(true, true);
+		  
+		  object.children.forEach(child => {
+			object.remove(child);            
+
+			// If the child is a Mesh, recenter its geometry.
+			if (child instanceof THREE.Mesh && child.geometry) {
+			  child.geometry.center();
+			}
+			
+			child.position.set(30, 30, 30);
+
+			child.scale.set(SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR);
+			
+			scene.add(child);
+			mushrooms.push(child);
+		  });
+		} else {
+		  if (object instanceof THREE.Mesh && object.geometry) {
+			object.geometry.center();
+		  }
+		  object.position.set(55, 55, 55);
+		  object.scale.set(SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR);
+		  planet.add(object);
+		  mushrooms.push(object);
+		}
+		console.log('Mushrooms loaded:', mushrooms);
+	  });
 	});
-	/**
-	 * Adding drag movement to mushroom
-	 */
 
-	const dragControls = new DragControls(objects, camera, renderer.domElement);
+
+	/**
+	 * Adding drag controls for mushrooms 
+	 */
+	const dragControls = new DragControls(mushrooms, camera, renderer.domElement);
+
 	dragControls.addEventListener('dragstart', dragStartCallback);
-	dragControls.addEventListener('dragend', dragendCallback);
+	dragControls.addEventListener('dragend', dragEndCallback);
+	dragControls.addEventListener('drag', dragCallback);
 
-	const pointLockControls = new PointerLockControls(camera, document.body);
-	/**
-	 * Cast shadow (darken colour) of selected mushroom
-	 */
 	function dragStartCallback(event: any) {
-		// pointLockControls.lock()
-		controls.enabled = false; // Disable OrbitControls
-
+		controls.enabled = false; 
 		startColor = event.object.material.color.getHex();
 		event.object.material.color.setHex(0x000000);
 	}
 
-	function dragendCallback(event: any) {
-		controls.enabled = true;
-		event.object.material.color.setHex(startColor);
-		// pointLockControls.unlock()
+	function dragCallback(event:any) {
+		controls.enabled = false; 
 	}
 
-	const clock = new THREE.Clock();
+	function dragEndCallback(event: any) {
+		controls.enabled = true;
+		event.object.material.color.setHex(startColor);
+	  
+		const mushroom = event.object
 
-	// ANIMATION LOOP
+		// const currentDistance = Math.abs(mushroom.position.length())
+		const targetDistance = planetRadius;
+		console.log('currentDistance', mushroom.position, 'targetDistance', targetDistance, 'planet position', planet.position, 'mushroom local position', mushroom.position);
+
+		// calculate the normalized direction from the planet's center to the mushroom.
+		const direction = mushroom.position.clone().normalize();
+		  
+		// scale direction by targetDistance
+		mushroom.position.copy(direction.multiplyScalar(planetRadius+surfaceMargin));
+		console.log('mushroom position', mushroom.position)
+		  
+		// Update the mushroom's orientation so it faces outward from the planet.
+		mushroom.up.copy(direction);
+		mushroom.lookAt(mushroom.position.clone().add(direction));
+		mushroom.rotateX(Math.PI / 2);
+		console.log('new distance',mushroom.position.length());
+	  }
+
+
+	/**
+     * Add directional and ambient lighting 
+     */
+	const directionalLight = new THREE.DirectionalLight(0xe8b5bd, 0.8);
+	directionalLight.position.set(100, 100, 100).normalize();
+	directionalLight.target = planet;
+	scene.add(directionalLight);
+
+	const ambientLight = new THREE.AmbientLight(0x000000, 0.00005);
+	ambientLight.position.set(-100, 100, -100);
+
+	scene.add(ambientLight);
+
+	const animationActions: THREE.AnimationAction[] = [];
+	let activeAction: THREE.AnimationAction;
+	let mixer: THREE.AnimationMixer | null = null;
+
+
+	/**
+	 * Animation loop
+	 */
+	const clock = new THREE.Clock();
 	const animate = () => {
 		requestAnimationFrame(animate);
-
-		const delta = clock.getDelta(); // Get time elapsed since last frame
-		if (mixer) mixer.update(delta); // Update animation
-		sphere.userData.update(clock.elapsedTime);
-
+		const delta = clock.getDelta();
+		if (mixer) mixer.update(delta); 
+		planet.userData.update(clock.elapsedTime);
 		renderer.render(scene, camera);
 	};
 
 	animate();
-	scene.add(sphere);
+	scene.add(planet);
 }
