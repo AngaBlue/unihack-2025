@@ -2,11 +2,12 @@
 
 import { hydrate } from '@/util/hydrated';
 import { ToastType, createToast } from '@/util/toasts';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
-import TerrariumTwo from './TerrariumTwo';
 import { ThreeProvider } from './ThreeContext';
+import { SpeechModal, speechChain } from '@/app/components/SpeechModal';
 import init from '@/three/init';
+import ToastWrapper from './components/ToastWrapper';
 
 export default function Client() {
     const [scene, setScene] = useState<THREE.Scene | null>(null);
@@ -36,6 +37,8 @@ export default function Client() {
 
 	return (
 		<ThreeProvider scene={scene} camera={camera}>
+			<SpeechModal speechChain={speechChain} />
+			<ToastWrapper />
 			<div ref={ref} />
 		</ThreeProvider>
 	);
