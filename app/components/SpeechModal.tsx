@@ -46,35 +46,44 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 	const [isLoading, setIsLoading] = useState(false);
 
 	const handleFormSubmit: FormEventHandler<HTMLFormElement> = async e => {
-		e.preventDefault();
-		if (index < speechChain.length && speechChain[index].inputInstruction) {
-			switch (speechChain[index].changeValue) {
-				case ValueToChange.GOAL:
-					setGoal(input);
-					break;
-				case ValueToChange.NAME:
-					setName(input);
-					break;
-			}
-		}
-		
-		document.getElementById('replyInput')?.setAttribute('value', ''); // speechChain[index].userInput);
-		console.log(`Goal: ${goal}, Name: ${name}, Index ${index}`);
-
-		if (index >= speechChain.length - 1) {
-			setIsLoading(true);
-			const { tasks } = await queryAI(goal);
+		if (isLoading){
 			setIsLoading(false);
-			setSkillTree(tasks);
-		}
+			setIndex(index + 1);
+		} else {
 		
-		setIndex(index + 1);
-		setInput('');
+			e.preventDefault();
+			if (index < speechChain.length && speechChain[index].inputInstruction) {
+				switch (speechChain[index].changeValue) {
+					case ValueToChange.GOAL:
+						setGoal(input);
+						break;
+					case ValueToChange.NAME:
+						setName(input);
+						break;
+				}
+			}
+			
+			document.getElementById('replyInput')?.setAttribute('value', ''); // speechChain[index].userInput);
+			console.log(`Goal: ${goal}, Name: ${name}, Index ${index}`);
+
+			if (index >= speechChain.length - 1) {
+				setIsLoading(true);
+				const { tasks } = await queryAI(goal);
+				setIsLoading(false);
+				setSkillTree(tasks);
+			}
+			
+			setIndex(index + 1);
+			setInput('');
+		}
 	};
 
-
-	let message = (speechChain[index].text).replace(`{${ValueToChange.NAME}}`, name);
-	message = message.replace(`{${ValueToChange.GOAL}}`, goal);
+	// Alter the messages such that they are customised to the user
+	let message = '';
+	if (index < speechChain.length){
+		message = (speechChain[index].text).replace(`{${ValueToChange.NAME}}`, name);
+		message = message.replace(`{${ValueToChange.GOAL}}`, goal);
+	}
 
 	return (
 		<div className='text-foreground text-xl'>
@@ -85,7 +94,7 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 					</div>
 					{/* SPEECH BUBBLE ELEMENT */}
 					<div className='relative bg-background/95 rounded-lg h-3/4 top-5 border-6 border-highlight flex flex-col justify-center items-center'>
-						<p className='p-10 text-center'>{isLoading ? 'Loading' : message}</p>
+						<p className='p-10 text-center'>{isLoading ? 'Thinking of steps to take for your goal, I\'ll let you know when I\'ve got something for you ☺️' : message}</p>
 						{isLoading ? (
 							<div className='flex justify-center items-center w-full h-full'>
 								<FaSpinner className='animate-spin h-8 w-8 text-foreground' />
@@ -121,7 +130,7 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 
 							{/* Next Button / Close button / Submit Button */}
 							<button type='submit' className='absolute right-10 bottom-10 p-5 bg-highlight/100 rounded-lg'>
-								{isLoading ? null : index < speechChain.length ? 'Next →' : 'Close X'}
+								{index < speechChain.length-1 ? 'Next →' : 'Close X'}
 							</button>
 						</form>
 					</div>
