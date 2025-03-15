@@ -7,6 +7,9 @@ import * as THREE from 'three';
 import { ThreeProvider } from './ThreeContext';
 import BackgroundMusic from './components/BackgroundMusic';
 import ToastWrapper from './components/ToastWrapper';
+import { SpeechModal, speechChain } from './components/SpeechModal';
+import { GoalProvider } from './GoalContext';
+
 
 export default function Client() {
 	const [scene, setScene] = useState<THREE.Scene | null>(null);
@@ -43,11 +46,13 @@ export default function Client() {
 	if (!(scene && camera)) return null;
 
 	return (
-		<ThreeProvider scene={scene} camera={camera}>
-			<BackgroundMusic />
-			{/* <SpeechModal speechChain={speechChain} /> */}
-			<ToastWrapper />
-			<div ref={ref} />
-		</ThreeProvider>
+		<GoalProvider>
+			<ThreeProvider scene={scene} camera={camera}>
+				<BackgroundMusic />
+				<SpeechModal speechChain={speechChain} />
+				<ToastWrapper />
+				<div ref={ref} />
+			</ThreeProvider>
+		</GoalProvider>
 	);
 }
