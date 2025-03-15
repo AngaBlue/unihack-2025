@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { type type type FormEventHandler, type ReactElement, useState } from 'react';
+import { type FormEventHandler, type ReactElement, useState } from 'react';
 export interface ModalChainProps {
 	speechChain: ModalProps[];
 }
