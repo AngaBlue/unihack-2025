@@ -7,9 +7,22 @@
 }
 
 @theme inline {
-	--color-background: var(--background);
-	--color-highlight: var(--highlight);
-	--color-foreground: var(--foreground);
+	--color-brand-50: #edf0ff;
+	--color-brand-100: #dfe2ff;
+	--color-brand-200: #c5caff;
+	--color-brand-300: #a1a6ff;
+	--color-brand-400: #807cfd;
+	--color-brand-500: #6e5df7;
+	--color-brand-600: #5f3fec;
+	--color-brand-700: #5d3fd3;
+	--color-brand-800: #432ba8;
+	--color-brand-900: #392b84;
+	--color-brand-950: #23194d;
+
+	--color-background: var(--color-brand-950);
+	--color-highlight: var(--color-brand-200);
+	--color-foreground: var(--color-brand-50);
+
 	--font-sans: var(--font-geist-sans);
 	--font-mono: var(--font-geist-mono);
 }

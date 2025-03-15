@@ -44,7 +44,6 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
         return mesh;
     }
 
-
     camera.position.set(0, 0, 500);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -135,12 +134,12 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
     const skybox = new THREE.Mesh(skyboxGeo, skyboxArray);
     scene.add(skybox);
 
-    const directionalLight = new THREE.DirectionalLight(0xE8B5BD, 0.6);
+    const directionalLight = new THREE.DirectionalLight(0xE8B5BD, 0.8);
     directionalLight.position.set(100, 100, 100).normalize();
     directionalLight.target = sphere;
     scene.add(directionalLight);
 
-    const ambientLight = new THREE.AmbientLight(0xE8B5BD, 0.1);
+    const ambientLight = new THREE.AmbientLight(0xE8B5BD, 0.00005);
     ambientLight.position.set(-100, 100, -100);
 
     scene.add(ambientLight);
