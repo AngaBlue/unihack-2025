@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { type FormEventHandler, type ReactElement, useState } from 'react';
 import { useGoalContext } from '@/app/GoalContext';
 import queryAI from '@/util/queryAI';
+import { FaSpinner } from 'react-icons/fa';
 
 export interface ModalChainProps {
 	speechChain: ModalProps[];
@@ -87,7 +88,7 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 					</p>
 					{isLoading ? (
 						<div className="flex justify-center items-center w-full h-full">
-						<Image src="/LoadingGIF.gif" className="mx-auto w-max h-max" width={100} height={100} />
+						<FaSpinner className='animate-spin h-8 w-8 text-foreground' />
 						</div>
 					) : null}
 					<div
