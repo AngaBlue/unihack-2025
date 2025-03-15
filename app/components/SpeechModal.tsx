@@ -2,11 +2,12 @@
 import Image from 'next/image';
 import { useState } from 'react';
 
-interface ModalProps {
+export interface ModalProps {
 	text: string;
+	nextButton: HTMLButtonElement;
 }
 
-export default function SpeechModal({ text }: ModalProps) {
+export function SpeechModal( {text, nextButton}: ModalProps) {
 	const [modal, setModal] = useState(true);
 
 
@@ -18,7 +19,7 @@ export default function SpeechModal({ text }: ModalProps) {
 		<div>
 			{modal && (
 				<div className='absolute left-10 right-10 bottom-10 top-10 p-5 bg-white/25 rounded-lg'>
-					<button className='absolute right-2 top-2 text-red-600' onClick={() => setModal(!modal)}>
+					<button className='absolute right-2 top-2 text-red-600 font-bold' onClick={() => setModal(!modal)}>
 						X
 					</button>
 					<div>					
@@ -40,4 +41,30 @@ export default function SpeechModal({ text }: ModalProps) {
 			)}
 		</div>
 	);
+}
+
+
+export function InfoModal({ text }: ModalProps) {}
+
+export function InputModal({ text }: ModalProps) {
+	return (
+		SpeechModal({ text, nextButton: new HTMLButtonElement() })
+	);
+}
+
+
+
+export function NextButton({ nextButton }: ModalProps) {
+	return (
+		<button
+			className='absolute right-10 bottom-10 p-5 bg-white/25 rounded-lg'
+			onClick={() => nextButton.click()}
+		>
+			Next →
+		</button>
+	);
+}
+
+export default function createChain(){
+
 }
