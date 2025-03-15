@@ -43,6 +43,7 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 
 	const [index, setIndex] = useState(0);
 	const [input, setInput] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
 
 	
 
@@ -60,62 +61,70 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 		console.log(`Goal: ${goal}, Name: ${name}, Index ${index}`);
 		
 		if (index >= speechChain.length -1){
+			setIsLoading(true);
 			const { tasks } = await queryAI(goal);
-			
+			setIsLoading(false);
 			setSkillTree(tasks);
-			console.log(`tasks[0] = ${tasks[0]}`);
-			console.log(`skillTree = ${skillTree}`)
-			console.log(`shit = ${tasks}`);
-			// TODO set Motivationals
+			console.log(skillTree);
 		}
 	};
+	async function getskills(){
+		const { tasks } = await queryAI(goal);
+		setSkillTree(tasks);
+	}
 
 	return (
 		<div className='text-foreground text-xl'>
-			{index < speechChain.length && (
+			{(isLoading || index < speechChain.length) && (
 				<div className='absolute left-10 right-10 bottom-10 top-10 p-5 bg-tansparent rounded-lg'>
 					<div>
 						<Image className='absolute -right-2 -bottom-2 rounded-full' src='/mascot.png' alt='placeholder' width={100} height={100} />
 					</div>
 					{/* SPEECH BUBBLE ELEMENT */}
-					<div className='relative bg-background/95 rounded-lg h-3/4 top-5 border-6 border-highlight'>
-						<p className='p-10 text-center align-middle'>{speechChain[index].text}</p>
+					<div className="relative bg-background/95 rounded-lg h-3/4 top-5 border-6 border-highlight flex flex-col justify-center items-center">
+					<p className="p-10 text-center">
+						{isLoading ? "Loading" : speechChain[index].text}
+					</p>
+					{isLoading ? (
+						<div className="flex justify-center items-center w-full h-full">
+						<Image src="/LoadingGIF.gif" className="mx-auto w-max h-max" width={100} height={100} />
+						</div>
+					) : null}
+					<div
+						className="absolute w-0 h-0
+								border-l-[64px] border-l-transparent
+								border-t-[60px] border-t-highlight
+								border-r-[9px] border-r-transparent
+								right-13 top-1/1"
+					/>
+					<div
+						className="absolute w-0 h-0 
+								border-l-[50px] border-l-transparent
+								border-t-[50px] border-t-background
+								border-r-[5px] border-r-transparent
+								right-15 top-1/1"
+					/>
 
-						<div
-							className='absolute w-0 h-0
-							border-l-[64px] border-l-transparent
-							border-t-[60px] border-t-highlight
-							border-r-[9px] border-r-transparent
-							right-13 top-1/1'
+					{/* Input Element */}
+					<form onSubmit={handleFormSubmit} className='w-full flex align-middle justify-center'>
+						{(!isLoading && index < speechChain.length && speechChain[index].inputInstruction) && (
+						<input
+							id="replyInput"
+							type="text"
+							placeholder={speechChain[index].inputInstruction}
+							className="w-3/4 p-5 m-5 rounded-lg text-foreground border-2 border-highlight"
+							onChange={e => setInput(e.target.value)}
+							value={input}
 						/>
-						<div
-							className='absolute w-0 h-0 
-							border-l-[50px] border-l-transparent
-							border-t-[50px] border-t-background
-							border-r-[5px] border-r-transparent
-							right-15 top-1/1'
-						/>
+						)}
 
-						{/* Input Element */}
-						<form onSubmit={handleFormSubmit}>
-							{index < speechChain.length && speechChain[index].inputInstruction && (
-								<input
-									id='replyInput'
-									type='text'
-									placeholder={speechChain[index].inputInstruction}
-									className='p-5 m-5 rounded-lg text-foreground w-full'
-									onChange={e => setInput(e.target.value)}
-									value={input}
-								/>
-							)}
-
-							{/* Next Button / Close button / Submit Button*/}
-							<button type='submit' className='absolute right-10 bottom-10 p-5 bg-highlight/100 rounded-lg'>
-								{/* Close button if this is the last item */}
-								{index < speechChain.length ? 'Next →' : 'Close X'}
-							</button>
-						</form>
+						{/* Next Button / Close button / Submit Button */}
+						<button type="submit" className="absolute right-10 bottom-10 p-5 bg-highlight/100 rounded-lg">
+						{isLoading ? null : (index < speechChain.length ? 'Next →' : 'Close X')}
+						</button>
+					</form>
 					</div>
+
 				</div>
 			)}
 		</div>
@@ -139,7 +148,7 @@ export const speechChain: ModalProps[] = [
 		changeValue: ValueToChange.NAME
 	},
 	{
-		text: 'Nice to meet you, xxxx! I am your guide, Growth Garden. I will help you reach your goal.',
+		text: 'Nice to meet you, xxx! I am your guide, Growth Garden. I will help you reach your goal.',
 		changeValue: ValueToChange.NONE
 	},
 	{
