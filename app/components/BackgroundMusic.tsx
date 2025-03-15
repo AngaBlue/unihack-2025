@@ -1,28 +1,65 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
+import useSound from 'use-sound';
+
+const BASE_VOLUME = 0.5;
+const MUSIC_VOLUME = 1.5 * BASE_VOLUME;
+const BUBBLES_VOLUME = 0.5 * BASE_VOLUME;
 
 export default function BackgroundMusic() {
-	const audioRef = useRef<HTMLAudioElement>(null);
+	const [playMusic, { stop: stopMusic }] = useSound('/sounds/music.mp3', { loop: true, volume: MUSIC_VOLUME });
+	const [playOwl1] = useSound('/sounds/owl-1.mp3', { volume: BASE_VOLUME });
+	const [playOwl2] = useSound('/sounds/owl-2.mp3', { volume: BASE_VOLUME });
+	const [playBubbles] = useSound('/sounds/bubbles.mp3', { volume: BUBBLES_VOLUME });
 
+	// Background Music
 	useEffect(() => {
-    if (!audioRef.current) return;
-    const playAudio = () => {
-      audioRef.current?.play().catch(error => console.error("Audio play failed", error));
-    };
-    
-    document.addEventListener("click", playAudio, { once: true });
-		audioRef.current.play().catch(error => console.error('Audio play failed', error));
+		const play = () => playMusic();
+		document.addEventListener('click', () => play, { once: true });
+		play();
 		return () => {
-      document.removeEventListener("click", playAudio);
-      audioRef.current?.pause();
-    }
-	}, [audioRef]);
+			stopMusic();
+			document.removeEventListener('click', play);
+		};
+	}, [playMusic, stopMusic]);
 
-	return (
-		// biome-ignore lint/a11y/useMediaCaption: <explanation>
-<audio ref={audioRef} loop autoPlay>
-			<source src='/sounds/happy_loop.mp3' type='audio/mp3' />
-			Your browser does not support the audio element.
-		</audio>
-	);
+	// Owls
+	useEffect(() => {
+		let timeout: ReturnType<typeof setTimeout> | null = null;
+		const playRandomEffect = () => {
+			const MIN = 5_000;
+			const MAX = 15_000;
+			const randomTime = Math.random() * (MAX - MIN) + MIN;
+			timeout = setTimeout(() => {
+				Math.random() > 0.5 ? playOwl1() : playOwl2();
+				playRandomEffect();
+			}, randomTime);
+		};
+
+		playRandomEffect();
+		return () => {
+			if (timeout) clearTimeout(timeout);
+		};
+	}, [playOwl1, playOwl2]);
+
+	// Bubbles
+	useEffect(() => {
+		let timeout: ReturnType<typeof setTimeout> | null = null;
+		const playRandomEffect = () => {
+			const MIN = 10_000;
+			const MAX = 20_000;
+			const randomTime = Math.random() * (MAX - MIN) + MIN;
+			timeout = setTimeout(() => {
+				playBubbles();
+				playRandomEffect();
+			}, randomTime);
+		};
+
+		playRandomEffect();
+		return () => {
+			if (timeout) clearTimeout(timeout);
+		};
+	});
+
+	return null;
 }
