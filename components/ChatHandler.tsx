@@ -16,7 +16,7 @@ export default function ChatHander() {
 	const [steps, setSteps] = useState<Step[]>([
 		{ message: "Hey there traveler! You've made it to Growth Garden!" },
 		{ message: "I'm Bruce, what's your name?", placeholder: 'Enter your name...', onConfirm: setName },
-		{ message: 'How would you like to improve your wellbeing?', placeholder: 'Enter your goal...', onConfirm: setGoal }
+		{ message: 'How would you like to improve your life?', placeholder: 'Enter your goal...', onConfirm: setGoal }
 	]);
 
 	const [playPluck] = useSound('/sounds/rise_ding.mp3', { volume: 0.3 });
