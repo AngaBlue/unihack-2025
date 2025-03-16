@@ -51,10 +51,10 @@ export default function ChatOverlay({ steps }: ChatOverlayProps) {
 			initial={{ opacity: 0, y: 20 }}
 			animate={{ opacity: 1, y: 0 }}
 			exit={{ opacity: 0, y: 20 }}
-			className='fixed bottom-8 right-8 flex items-end space-x-2'
+			className='fixed bottom-20 right-20 flex items-end space-x-2'
 		>
 			<div className='w-84 bg-[var(--color-brand-50)] shadow-lg rounded-2xl p-4 flex flex-col space-y-4 border border-[var(--color-brand-300)] relative'>
-				<Card className='relative bg-[var(--color-brand-100)] text-[var(--color-brand-900)]'>
+				<Card className='relative bg-[var(--color-brand-100)] text-[var(--color-brand-900)] border-2'>
 					<CardContent className='p-4 space-y-4'>
 						<p className='text-sm text-[var(--color-brand-900)]'>{currentStep.message}</p>
 						{currentStep.placeholder && (
@@ -92,8 +92,22 @@ export default function ChatOverlay({ steps }: ChatOverlayProps) {
 							)}
 						</div>
 					</CardContent>
+					<div
+							className='absolute w-0 h-0
+								border-l-[57px] border-l-transparent
+								border-t-[34px] border-t-brand-900
+								border-r-[6px] border-r-transparent
+								right-2 top-1/1'
+						/>
+						<div
+							className='absolute w-0 h-0 
+								border-l-[50px] border-l-transparent
+								border-t-[30px] border-t-[var(--color-brand-100)]
+								border-r-[5px] border-r-transparent
+								right-3 top-1/1'
+						/>
 				</Card>
-				<div className='absolute -right-5 -bottom-5 w-20 h-20 rounded-full overflow-hidden border-4 border-[var(--color-brand-500)] bg-white shadow-md'>
+				<div className='absolute -right-10 -bottom-16 w-20 h-20 rounded-full overflow-hidden border-4 border-[var(--color-brand-500)] bg-white shadow-md'>
 					<Image src={mascot} alt='Mascot' layout='fill' objectFit='contain' />
 				</div>
 			</div>
