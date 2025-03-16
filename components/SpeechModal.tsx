@@ -140,7 +140,8 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 	);
 }
 
-export const speechChain: ModalProps[] = [
+
+export const welcomeSpeech: ModalProps[] = [
 	{
 		text: 'Hey there traveler! You have arrived at the Growth Garden.',
 		changeValue: ValueToChange.NONE
@@ -164,3 +165,29 @@ export const speechChain: ModalProps[] = [
 		changeValue: ValueToChange.NONE
 	}
 ];
+
+export const reviseGoalSpeech: ModalProps[] = [
+	{
+		text: `Hey there {${ValueToChange.NAME}}, I'm so sorry that your goal, {${ValueToChange.GOAL}}, is not working out 😞`,
+		changeValue: ValueToChange.NONE
+	},
+	{
+		text: 'Let\'s change your goal to something that works better for you!',
+		inputInstruction:"I would like to be better at...",
+		changeValue: ValueToChange.GOAL
+	},
+	{
+		text: 'Awesome! Let\s get to it!',
+		changeValue: ValueToChange.NONE
+	}
+]
+
+
+export function openSpeech(): ReactElement | null {
+	const { skillTree } = useGoalContext();
+	if (skillTree.length === 0) {
+		return <SpeechModal speechChain={welcomeSpeech}/>
+	} 
+
+	return <SpeechModal speechChain={reviseGoalSpeech}/>
+}
