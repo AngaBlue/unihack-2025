@@ -54,7 +54,7 @@ export default function ChatOverlay({ steps }: ChatOverlayProps) {
 			className='fixed bottom-20 right-20 flex items-end space-x-2'
 		>
 			<div className='w-84 bg-brand-50 shadow-lg rounded-2xl p-4 flex flex-col space-y-4 border border-brand-300 relative'>
-				<Card className='relative bg-brand-100 text-brand-900 border-2'>
+				<Card className='relative bg-brand-100 text-brand-900 border-2 border-background'>
 					<CardContent className='p-4 space-y-4'>
 						<p className='text-sm text-brand-900'>{currentStep.message}</p>
 						{currentStep.placeholder && (
@@ -95,7 +95,7 @@ export default function ChatOverlay({ steps }: ChatOverlayProps) {
 					<div
 							className='absolute w-0 h-0
 								border-l-[57px] border-l-transparent
-								border-t-[34px] border-t-brand-900
+								border-t-[34px] border-t-background
 								border-r-[6px] border-r-transparent
 								right-2 top-1/1'
 						/>
@@ -107,7 +107,7 @@ export default function ChatOverlay({ steps }: ChatOverlayProps) {
 								right-3 top-1/1'
 						/>
 				</Card>
-				<div className='absolute -right-10 -bottom-16 w-20 h-20 rounded-full overflow-hidden border-4 border-brand-500 shadow-md bg-brand-700'>
+				<div className='absolute -right-10 -bottom-16 w-20 h-20 rounded-full overflow-hidden border-4 border-brand-400 bg-brand-700 shadow-md'>
 					<Image src={mascot} alt='Mascot' layout='fill' objectFit='contain' className='animate-float' />
 				</div>
 			</div>

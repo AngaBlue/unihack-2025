@@ -183,9 +183,74 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	animate();
 	scene.add(planet);
 	addRandomObject(scene);
+	addInitialTerrain(scene, 50);
 }
 
 const loadedNumbers = new Set<number>();
+
+function addInitialTerrain(scene: THREE.Scene, planetRadius: number) {
+    const mtlLoader = new MTLLoader();
+
+    mtlLoader.load(`objects/grass.mtl`, materials => {
+        materials.preload();
+
+        const objLoader = new OBJLoader();
+        objLoader.setMaterials(materials);
+        objLoader.setPath('/');
+
+        objLoader.load(`objects/grass.obj`, (loadedObject: THREE.Object3D) => {
+
+            // Create 6 distinct grass objects
+            for (let i = 0; i < 30; i++) {
+                const object = loadedClone( loadedObject );
+
+                // Set random position around the sphere
+                object.position.set(
+                    Math.random() - 0.5,
+                    Math.random() - 0.5,
+                    Math.random() - 0.5
+                ).normalize();
+
+                object.scale.set(35, 35, 35);
+
+                attachObjectToPlanet(object, planetRadius);
+                scene.add(object);
+            }
+        })
+	
+		objLoader.load(`objects/rocks.obj`, (loadedObject: THREE.Object3D) => {
+
+            // Create 6 distinct grass objects
+            for (let i = 0; i < 10; i++) {
+                const object = loadedClone( loadedObject );
+
+                // Set random position around the sphere
+                object.position.set(
+                    Math.random() - 0.5,
+                    Math.random() - 0.5,
+                    Math.random() - 0.5
+                ).normalize();
+
+                object.scale.set(10, 10, 10);
+
+                attachObjectToPlanet(object, planetRadius);
+                scene.add(object);
+            }
+        }
+	);
+    });
+}
+
+// Helper function for cloning objects
+function loadedClone(source: THREE.Object3D): THREE.Object3D {
+    const clone = source.clone(true);
+    clone.traverse(function(node) {
+        if (node instanceof THREE.Mesh) {
+            node.material = (node.material as THREE.Material).clone();
+        }
+    });
+    return clone;
+} 
 
 export function addRandomObject(scene: THREE.Scene) {
 	let num: number;
@@ -240,4 +305,21 @@ export function addRandomObject(scene: THREE.Scene) {
 			}
 		});
 	});
+}
+
+
+function attachObjectToPlanet(object: THREE.Object3D, planetRadius: number) {
+    // Calculate normalized direction from planet center to the object position
+    const direction = object.position.clone().normalize();
+
+    // Calculate surface margin based on object's height
+    const surfaceMargin = -8;//(object.userData.height ?? 0) * 0.5;
+
+    // Set object's position directly on planet's surface
+    object.position.copy(direction.multiplyScalar(planetRadius + surfaceMargin));
+
+    // Orient object to face outward from planet's surface
+    object.up.copy(direction);
+    object.lookAt(object.position.clone().add(direction));
+    object.rotateX(Math.PI / 2);
 }
