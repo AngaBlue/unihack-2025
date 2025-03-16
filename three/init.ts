@@ -192,7 +192,7 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	function dragEndCallback(event: DragEvent) {
 		controls.enabled = true;
 		if (event.object.material.color) {
-			event.object.material.color.setHex(startColor);
+			event.object.material.color.setHex(event.object.startColor );
 		}
 
 		const mushroom = event.object;
