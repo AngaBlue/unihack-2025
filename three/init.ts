@@ -1,3 +1,4 @@
+import { hydration } from '@/util/hydrated';
 import * as THREE from 'three';
 import { OrbitControls } from 'three-stdlib';
 import { MTLLoader } from 'three-stdlib';
@@ -11,6 +12,15 @@ interface DragEvent {
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	object: any;
 }
+
+let pickUpAudio: HTMLAudioElement | null = null;
+let placeAudio: HTMLAudioElement | null = null;
+
+(async () => {
+	await hydration.promise;
+	pickUpAudio = new Audio('/sounds/pluck_mushroom.mp3');
+	placeAudio = new Audio('/sounds/place.mp3');
+})();
 
 const OBJECT_SIZE = 13;
 const OBJECT_SPAWN_LOCATION: THREE.Vector3Tuple = [40, 40, 40];
@@ -123,11 +133,14 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 			event.object.remove(event.object.userData.brightLight);
 			event.object.userData.brightLight = null;
 		}
-		// const glowChild = event.object.getObjectByName('glowMesh');
-		const glowChild = scene.getObjectByName('glowMesh');
 
-		if (glowChild) {
-			scene.remove(glowChild);
+		const glowChild = scene.getObjectByName('glowMesh');
+		if (glowChild) scene.remove(glowChild);
+
+		try {
+			pickUpAudio?.play();
+		} catch (error) {
+			console.log(error);
 		}
 	}
 
@@ -161,6 +174,12 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 		brightLight.position.set(0, 0, 0);
 		mushroom.add(brightLight);
 		mushroom.userData.brightLight = brightLight;
+
+		try {
+			placeAudio?.play();
+		} catch (error) {
+			console.log(error);
+		}
 	}
 
 	/**
@@ -197,68 +216,57 @@ const loadedNumbers = new Set<number>();
  * Adding initial terrain
  */
 function addInitialTerrain(scene: THREE.Scene, planetRadius: number) {
-    const mtlLoader = new MTLLoader();
+	const mtlLoader = new MTLLoader();
 
-    mtlLoader.load(`objects/grass.mtl`, materials => {
-        materials.preload();
+	mtlLoader.load(`objects/grass.mtl`, materials => {
+		materials.preload();
 
-        const objLoader = new OBJLoader();
-        objLoader.setMaterials(materials);
-        objLoader.setPath('/');
+		const objLoader = new OBJLoader();
+		objLoader.setMaterials(materials);
+		objLoader.setPath('/');
 
-        objLoader.load(`objects/grass.obj`, (loadedObject: THREE.Object3D) => {
+		objLoader.load(`objects/grass.obj`, (loadedObject: THREE.Object3D) => {
+			// Create 6 distinct grass objects
+			for (let i = 0; i < 30; i++) {
+				const object = loadedClone(loadedObject);
 
-            // Create 6 distinct grass objects
-            for (let i = 0; i < 20; i++) {
-                const object = loadedClone( loadedObject );
+				// Set random position around the sphere
+				object.position.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize();
 
-                // Set random position around the sphere
-                object.position.set(
-                    Math.random() - 0.5,
-                    Math.random() - 0.5,
-                    Math.random() - 0.5
-                ).normalize();
+				object.scale.set(35, 35, 35);
 
-                object.scale.set(35, 35, 35);
+				attachObjectToPlanet(object, planetRadius);
+				scene.add(object);
+			}
+		});
 
-                attachObjectToPlanet(object, planetRadius);
-                scene.add(object);
-            }
-        })
-	
 		objLoader.load(`objects/rocks.obj`, (loadedObject: THREE.Object3D) => {
+			// Create 6 distinct grass objects
+			for (let i = 0; i < 10; i++) {
+				const object = loadedClone(loadedObject);
 
-            // Create 6 distinct grass objects
-            for (let i = 0; i < 5; i++) {
-                const object = loadedClone( loadedObject );
+				// Set random position around the sphere
+				object.position.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize();
 
-                // Set random position around the sphere
-                object.position.set(
-                    Math.random() - 0.5,
-                    Math.random() - 0.5,
-                    Math.random() - 0.5
-                ).normalize();
+				object.scale.set(10, 10, 10);
 
-                object.scale.set(10, 10, 10);
-
-                attachObjectToPlanet(object, planetRadius);
-                scene.add(object);
-            }
-        }
-	);
-    });
+				attachObjectToPlanet(object, planetRadius);
+				scene.add(object);
+			}
+		});
+	});
 }
 
 // Helper function for cloning objects
 function loadedClone(source: THREE.Object3D): THREE.Object3D {
-    const clone = source.clone(true);
-    clone.traverse(function(node) {
-        if (node instanceof THREE.Mesh) {
-            node.material = (node.material as THREE.Material).clone();
-        }
-    });
-    return clone;
-} 
+	const clone = source.clone(true);
+	clone.traverse(node => {
+		if (node instanceof THREE.Mesh) {
+			node.material = (node.material as THREE.Material).clone();
+		}
+	});
+	return clone;
+}
 
 /**
  * Adding new object into the game
@@ -313,18 +321,17 @@ export function addRandomObject(scene: THREE.Scene) {
 					planetObjects.push(child);
 					console.log('planetObjects loaded:', planetObjects);
 
-
 					/**
-					 * Add a glowing light surrounding the object 
+					 * Add a glowing light surrounding the object
 					 */
 					const glowMesh = child.clone();
 					glowMesh.material = new THREE.MeshStandardMaterial({
-							color: 0x00ffcc,
-							emissive: 0x00ffcc,
-							emissiveIntensity: 2.0,
-							transparent: true,
-							opacity: 0.7,
-						});
+						color: 0x00ffcc,
+						emissive: 0x00ffcc,
+						emissiveIntensity: 2.0,
+						transparent: true,
+						opacity: 0.7
+					});
 					child.position.set(...OBJECT_SPAWN_LOCATION);
 					child.scale.set(targetObjectHeight / size.y, targetObjectHeight / size.y, targetObjectHeight / size.y);
 					// Name or flag it for easy removal later
@@ -337,19 +344,18 @@ export function addRandomObject(scene: THREE.Scene) {
 	});
 }
 
-
 function attachObjectToPlanet(object: THREE.Object3D, planetRadius: number) {
-    // Calculate normalized direction from planet center to the object position
-    const direction = object.position.clone().normalize();
+	// Calculate normalized direction from planet center to the object position
+	const direction = object.position.clone().normalize();
 
-    // Calculate surface margin based on object's height
-    const surfaceMargin = -8;//(object.userData.height ?? 0) * 0.5;
+	// Calculate surface margin based on object's height
+	const surfaceMargin = -8; //(object.userData.height ?? 0) * 0.5;
 
-    // Set object's position directly on planet's surface
-    object.position.copy(direction.multiplyScalar(planetRadius + surfaceMargin));
+	// Set object's position directly on planet's surface
+	object.position.copy(direction.multiplyScalar(planetRadius + surfaceMargin));
 
-    // Orient object to face outward from planet's surface
-    object.up.copy(direction);
-    object.lookAt(object.position.clone().add(direction));
-    object.rotateX(Math.PI / 2);
+	// Orient object to face outward from planet's surface
+	object.up.copy(direction);
+	object.lookAt(object.position.clone().add(direction));
+	object.rotateX(Math.PI / 2);
 }

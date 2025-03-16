@@ -40,9 +40,9 @@ export default function ChatHandler() {
 
 	// Add AI
 	useEffect(() => {
-		if (!goal) return;
+		if (!goal && tasks.length === 0) return;
 		fetchGoals(goal);
-	}, [goal, fetchGoals]);
+	}, [goal, tasks, fetchGoals]);
 
 	// Add random task
 	useEffect(() => {
