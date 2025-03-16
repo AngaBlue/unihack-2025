@@ -10,7 +10,7 @@ const fallback: Response = {
 
 export default async function fetchAiTasks(goal: string): Promise<Response> {
 	try {
-		return fallback;
+		// return fallback;
 		const res = await fetch('/GetSkills', {
 			method: 'POST',
 			headers: {
