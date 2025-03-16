@@ -107,8 +107,8 @@ export default function ChatOverlay({ steps }: ChatOverlayProps) {
 								right-3 top-1/1'
 						/>
 				</Card>
-				<div className='absolute -right-10 -bottom-16 w-20 h-20 rounded-full overflow-hidden border-4 border-brand-500 bg-white shadow-md'>
-					<Image src={mascot} alt='Mascot' layout='fill' objectFit='contain' />
+				<div className='absolute -right-10 -bottom-16 w-20 h-20 rounded-full overflow-hidden border-4 border-brand-500 shadow-md bg-brand-700'>
+					<Image src={mascot} alt='Mascot' layout='fill' objectFit='contain' className='animate-float' />
 				</div>
 			</div>
 		</motion.div>
