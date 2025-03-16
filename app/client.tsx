@@ -1,56 +1,69 @@
 'use client';
 import init from '@/three/init';
 import { hydrate } from '@/util/hydrated';
-import { ToastType, createToast } from '@/util/toasts';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { GoalProvider } from './GoalContext';
-import { ThreeProvider } from './ThreeContext';
-import BackgroundMusic from './components/BackgroundMusic';
-import { SpeechModal, speechChain } from './components/SpeechModal';
-import ToastWrapper from './components/ToastWrapper';
+import BackgroundMusic from '../components/BackgroundMusic';
+import { GoalProvider } from '../context/GoalContext';
+import { ThreeProvider } from '../context/ThreeContext';
 
 export default function Client() {
-	const [scene, setScene] = useState<THREE.Scene | null>(null);
-	const [camera, setCamera] = useState<THREE.PerspectiveCamera | null>(null);
-	const ref = useRef<HTMLDivElement>(null);
+	const sceneRef = useRef(new THREE.Scene());
+	const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+	const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+	const divRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		hydrate();
 
 		// Scene
-		if (!scene) {
-			const newScene = new THREE.Scene();
-			setScene(newScene);
-		}
+		const scene = sceneRef.current;
 
 		// Camera
-		if (!camera) {
-			const newCamera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 45, 30000);
-			setCamera(newCamera);
+		if (!cameraRef.current) {
+			cameraRef.current = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 45, 30000);
+			cameraRef.current.position.set(0, 0, 100);
 		}
+		const camera = cameraRef.current;
 
-		// Null-check ref, scene & camera
-		if (!(ref.current && scene && camera)) return;
+		// Ensure container exists
+		if (!divRef.current) return;
 
-		createToast({
-			name: 'Growth Garden',
-			message: 'What does growth mean to you?',
-			type: ToastType.INFO
-		});
+		// Renderer
+		if (!rendererRef.current) {
+			rendererRef.current = new THREE.WebGLRenderer({ antialias: true });
+			rendererRef.current.setSize(window.innerWidth, window.innerHeight);
+			divRef.current.appendChild(rendererRef.current.domElement);
+		}
+		const renderer = rendererRef.current;
 
-		init(scene, camera, ref.current);
-	}, [scene, camera, ref]);
+		// Handle window resizing
+		const handleResize = () => {
+			if (camera && rendererRef.current) {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				rendererRef.current.setSize(window.innerWidth, window.innerHeight);
+			}
+		};
+		window.addEventListener('resize', handleResize);
 
-	if (!(scene && camera)) return null;
+		// Populate scene with objects
+		init(scene, camera, renderer);
+
+		// Cleanup on unmount
+		return () => {
+			window.removeEventListener('resize', handleResize);
+			if (divRef.current && rendererRef.current) {
+				divRef.current.removeChild(rendererRef.current.domElement);
+			}
+		};
+	}, [sceneRef.current, cameraRef.current, divRef.current]);
 
 	return (
 		<GoalProvider>
-			<ThreeProvider scene={scene} camera={camera}>
+			<ThreeProvider scene={sceneRef.current} camera={cameraRef.current} renderer={rendererRef.current}>
 				<BackgroundMusic />
-				<SpeechModal speechChain={speechChain} />
-				<ToastWrapper />
-				<div ref={ref} />
+				<div ref={divRef} />
 			</ThreeProvider>
 		</GoalProvider>
 	);
