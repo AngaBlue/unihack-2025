@@ -2,6 +2,9 @@ import fetchAiTasks from '@/util/fetchAITasks';
 import { useCallback, useEffect, useState } from 'react';
 import ChatOverlay, { type Step } from './ChatOverlay';
 
+const MIN_TASK_TIME = 5_000;
+const MAX_TASK_TIME = 20_000;
+
 export default function ChatHander() {
 	const [name, setName] = useState('');
 	const [goal, setGoal] = useState('');
@@ -38,13 +41,22 @@ export default function ChatHander() {
 	// Add random task
 	useEffect(() => {
 		if (tasks.length === 0) return;
+
 		// Add new task
 		addStep({
 			message: tasks[0],
-			onConfirm: () => addStep({ message: "Nice job!  Here's something to add to your garden!" }),
-			onCancel: () => addStep({ message: "Don't worry!  I'\ve got plenty more ideas!" })
+			onConfirm: addNewTask(`Nice job ${name}!  Here's something to add to your garden!`),
+			onCancel: addNewTask(`Don't worry ${name}!  I've got plenty more ideas!`)
 		});
-	}, [tasks, addStep]);
+
+		function addNewTask(message: string) {
+			return () => {
+				addStep({ message });
+				const time = Math.random() * (MAX_TASK_TIME - MIN_TASK_TIME) + MIN_TASK_TIME;
+				setTimeout(() => setTasks(prev => prev.slice(1)), time);
+			};
+		}
+	}, [name, tasks, addStep]);
 
 	return <ChatOverlay steps={steps} />;
 }
