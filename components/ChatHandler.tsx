@@ -15,8 +15,7 @@ export default function ChatHandler() {
 	const [tasks, setTasks] = useState<string[]>([]);
 	const [steps, setSteps] = useState<Step[]>([
 		{ message: "Hey there traveler! You've made it to Growth Garden!" },
-		{ message: "I'm Bruce, what's your name?", placeholder: 'Enter your name...', onConfirm: setName },
-		{ message: 'How would you like to improve your life?', placeholder: 'Enter your goal...', onConfirm: setGoal }
+		{ message: "I'm Bruce, what's your name?", placeholder: 'Enter your name...', onConfirm: setName }
 	]);
 
 	const [playPluck] = useSound('/sounds/rise_ding.mp3', { volume: 0.3 });
@@ -34,8 +33,10 @@ export default function ChatHandler() {
 	// Add name introduction
 	useEffect(() => {
 		if (!name) return;
-		const step: Step = { message: `Hey ${name}, it's nice to meet you!  Let's have a look around!` };
-		addStep(step);
+		const introduction: Step = { message: `Hey ${name}, it's nice to meet you!` };
+		const goalStep: Step = { message: 'How would you like to improve your life?', placeholder: 'Enter your goal...', onConfirm: setGoal };
+		addStep(introduction);
+		addStep(goalStep);
 	}, [name, addStep]);
 
 	// Add AI
