@@ -19,7 +19,7 @@ export default function ChatHander() {
 		{ message: 'How would you like to improve your wellbeing?', placeholder: 'Enter your goal...', onConfirm: setGoal }
 	]);
 
-	const [playPluck] = useSound('/sounds/pluck_mushroom.mp3', { volume: 0.3 });
+	const [playPluck] = useSound('/sounds/rise_ding.mp3', { volume: 0.3 });
 
 	const addStep = useCallback((step: Step) => {
 		setSteps(prev => [...prev, step]);

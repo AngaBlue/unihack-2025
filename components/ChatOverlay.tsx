@@ -1,7 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import mascot from '@/public/icon.png';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { useState } from 'react';
 
 export interface Step {
@@ -49,47 +51,52 @@ export default function ChatOverlay({ steps }: ChatOverlayProps) {
 			initial={{ opacity: 0, y: 20 }}
 			animate={{ opacity: 1, y: 0 }}
 			exit={{ opacity: 0, y: 20 }}
-			className='fixed bottom-5 right-5 w-80 bg-brand-50 shadow-lg rounded-2xl p-4 flex flex-col space-y-4 border border-brand-300'
+			className='fixed bottom-8 right-8 flex items-end space-x-2'
 		>
-			<Card className='relative bg-brand-100 text-brand-900'>
-				<CardContent className='p-4 space-y-4'>
-					<p className='text-sm text-brand-900'>{currentStep.message}</p>
-					{currentStep.placeholder && (
-						<Input
-							type='text'
-							autoFocus
-							placeholder={currentStep.placeholder || 'Enter response'}
-							value={response}
-							minLength={currentStep.minLength}
-							maxLength={currentStep.maxLength}
-							className='border-brand-400 text-brand-900 focus:ring-brand-500 focus:border-brand-500'
-							onChange={e => setResponse(e.target.value)}
-							onKeyDown={e => e.key === 'Enter' && handleConfirm()}
-						/>
-					)}
-					<div className='flex justify-end space-x-2'>
-						{currentStep.onCancel && (
-							<Button
-								onClick={handleCancel}
-								variant='outline'
-								className='border-brand-500 hover:bg-brand-300 bg-brand-200 text-brand-900 cursor-pointer'
-							>
-								Skip
-							</Button>
+			<div className='w-84 bg-[var(--color-brand-50)] shadow-lg rounded-2xl p-4 flex flex-col space-y-4 border border-[var(--color-brand-300)] relative'>
+				<Card className='relative bg-[var(--color-brand-100)] text-[var(--color-brand-900)]'>
+					<CardContent className='p-4 space-y-4'>
+						<p className='text-sm text-[var(--color-brand-900)]'>{currentStep.message}</p>
+						{currentStep.placeholder && (
+							<Input
+								type='text'
+								autoFocus
+								placeholder={currentStep.placeholder || 'Enter response'}
+								value={response}
+								minLength={currentStep.minLength}
+								maxLength={currentStep.maxLength}
+								className='border-[var(--color-brand-400)] text-[var(--color-brand-900)] focus:ring-[var(--color-brand-500)] focus:border-[var(--color-brand-500)]'
+								onChange={e => setResponse(e.target.value)}
+								onKeyDown={e => e.key === 'Enter' && handleConfirm()}
+							/>
 						)}
-						{currentStep.onConfirm && (
-							<Button onClick={handleConfirm} className='bg-brand-600 text-white hover:bg-brand-700 cursor-pointer'>
-								Confirm
-							</Button>
-						)}
-						{!(currentStep.onConfirm || currentStep.onCancel) && (
-							<Button onClick={handleNext} className='bg-brand-700 text-white hover:bg-brand-800 cursor-pointer'>
-								Next
-							</Button>
-						)}
-					</div>
-				</CardContent>
-			</Card>
+						<div className='flex justify-end space-x-2'>
+							{currentStep.onCancel && (
+								<Button
+									onClick={handleCancel}
+									variant='outline'
+									className='border-brand-500 hover:bg-brand-300 bg-brand-200 text-brand-900 cursor-pointer'
+								>
+									Skip
+								</Button>
+							)}
+							{currentStep.onConfirm && (
+								<Button onClick={handleConfirm} className='bg-brand-600 text-white hover:bg-brand-700 cursor-pointer'>
+									Confirm
+								</Button>
+							)}
+							{!(currentStep.onConfirm || currentStep.onCancel) && (
+								<Button onClick={handleNext} className='bg-brand-700 text-white hover:bg-brand-800 cursor-pointer'>
+									Next
+								</Button>
+							)}
+						</div>
+					</CardContent>
+				</Card>
+				<div className='absolute -right-5 -bottom-5 w-20 h-20 rounded-full overflow-hidden border-4 border-[var(--color-brand-500)] bg-white shadow-md'>
+					<Image src={mascot} alt='Mascot' layout='fill' objectFit='contain' />
+				</div>
+			</div>
 		</motion.div>
 	);
 }
