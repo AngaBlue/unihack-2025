@@ -4,8 +4,9 @@ import { hydrate } from '@/util/hydrated';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import BackgroundMusic from '../components/BackgroundMusic';
-import { GoalProvider } from '../context/GoalContext';
+import { GoalProvider, ScriptChangeButton } from '../context/GoalContext';
 import { ThreeProvider } from '../context/ThreeContext';
+import { SpeechModal } from '@/components/SpeechModal';
 
 export default function Client() {
 	const sceneRef = useRef(new THREE.Scene());
@@ -61,6 +62,8 @@ export default function Client() {
 
 	return (
 		<GoalProvider>
+			<SpeechModal/>
+			<ScriptChangeButton/>
 			<ThreeProvider scene={sceneRef.current} camera={cameraRef.current} renderer={rendererRef.current}>
 				<BackgroundMusic />
 				<div ref={divRef} />
