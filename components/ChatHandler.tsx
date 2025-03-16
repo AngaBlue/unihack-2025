@@ -1,11 +1,15 @@
+import { useThree } from '@/context/ThreeContext';
+import { addRandomObject } from '@/three/init';
 import fetchAiTasks from '@/util/fetchAITasks';
 import { useCallback, useEffect, useState } from 'react';
+import useSound from 'use-sound';
 import ChatOverlay, { type Step } from './ChatOverlay';
 
 const MIN_TASK_TIME = 5_000;
 const MAX_TASK_TIME = 20_000;
 
 export default function ChatHander() {
+	const { scene } = useThree();
 	const [name, setName] = useState('');
 	const [goal, setGoal] = useState('');
 	const [tasks, setTasks] = useState<string[]>([]);
@@ -14,6 +18,8 @@ export default function ChatHander() {
 		{ message: "I'm Bruce, what's your name?", placeholder: 'Enter your name...', onConfirm: setName },
 		{ message: 'How would you like to improve your wellbeing?', placeholder: 'Enter your goal...', onConfirm: setGoal }
 	]);
+
+	const [playPluck] = useSound('/sounds/pluck_mushroom.mp3', { volume: 0.3 });
 
 	const addStep = useCallback((step: Step) => {
 		setSteps(prev => [...prev, step]);
@@ -45,18 +51,22 @@ export default function ChatHander() {
 		// Add new task
 		addStep({
 			message: tasks[0],
-			onConfirm: addNewTask(`Nice job ${name}!  Here's something to add to your garden!`),
+			onConfirm: addNewTask(`Nice job ${name}!  Here's something to add to your garden!`, true),
 			onCancel: addNewTask(`Don't worry ${name}!  I've got plenty more ideas!`)
 		});
 
-		function addNewTask(message: string) {
+		function addNewTask(message: string, success = false) {
 			return () => {
+				if (success) {
+					addRandomObject(scene);
+					playPluck();
+				}
 				addStep({ message });
 				const time = Math.random() * (MAX_TASK_TIME - MIN_TASK_TIME) + MIN_TASK_TIME;
 				setTimeout(() => setTasks(prev => prev.slice(1)), time);
 			};
 		}
-	}, [name, tasks, addStep]);
+	}, [name, tasks, addStep, playPluck, scene]);
 
 	return <ChatOverlay steps={steps} />;
 }
