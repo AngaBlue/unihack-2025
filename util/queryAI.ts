@@ -1,6 +1,6 @@
 async function queryAI(userInformation: string) {
 	try {
-		const res = await fetch('http://localhost:3000/GetSkills', {
+		const res = await fetch('/GetSkills', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
