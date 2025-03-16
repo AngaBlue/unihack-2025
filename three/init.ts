@@ -134,6 +134,9 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 			event.object.userData.brightLight = null;
 		}
 
+		const glowChild = scene.getObjectByName('glowMesh');
+		if (glowChild) scene.remove(glowChild);
+
 		try {
 			pickUpAudio?.play();
 		} catch (error) {
