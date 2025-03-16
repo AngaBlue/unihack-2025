@@ -123,6 +123,12 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 			event.object.remove(event.object.userData.brightLight);
 			event.object.userData.brightLight = null;
 		}
+		// const glowChild = event.object.getObjectByName('glowMesh');
+		const glowChild = scene.getObjectByName('glowMesh');
+
+		if (glowChild) {
+			scene.remove(glowChild);
+		}
 	}
 
 	function dragCallback() {
@@ -176,18 +182,21 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	const clock = new THREE.Clock();
 	const animate = () => {
 		requestAnimationFrame(animate);
+		const delta = clock.getDelta();
 		planet.userData.update(clock.elapsedTime);
 		renderer.render(scene, camera);
 	};
-
 	animate();
 	scene.add(planet);
-	addRandomObject(scene);
+	// addRandomObject(scene);
 	addInitialTerrain(scene, 50);
 }
 
 const loadedNumbers = new Set<number>();
 
+/**
+ * Adding initial terrain
+ */
 function addInitialTerrain(scene: THREE.Scene, planetRadius: number) {
     const mtlLoader = new MTLLoader();
 
@@ -201,7 +210,7 @@ function addInitialTerrain(scene: THREE.Scene, planetRadius: number) {
         objLoader.load(`objects/grass.obj`, (loadedObject: THREE.Object3D) => {
 
             // Create 6 distinct grass objects
-            for (let i = 0; i < 30; i++) {
+            for (let i = 0; i < 20; i++) {
                 const object = loadedClone( loadedObject );
 
                 // Set random position around the sphere
@@ -221,7 +230,7 @@ function addInitialTerrain(scene: THREE.Scene, planetRadius: number) {
 		objLoader.load(`objects/rocks.obj`, (loadedObject: THREE.Object3D) => {
 
             // Create 6 distinct grass objects
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 5; i++) {
                 const object = loadedClone( loadedObject );
 
                 // Set random position around the sphere
@@ -252,6 +261,9 @@ function loadedClone(source: THREE.Object3D): THREE.Object3D {
     return clone;
 } 
 
+/**
+ * Adding new object into the game
+ */
 export function addRandomObject(scene: THREE.Scene) {
 	let num: number;
 	do {
@@ -259,7 +271,6 @@ export function addRandomObject(scene: THREE.Scene) {
 	} while (loadedNumbers.has(num));
 
 	loadedNumbers.add(num);
-	num = 11;
 
 	const mtlLoader = new MTLLoader();
 	mtlLoader.load(`objects/${num}.mtl`, materials => {
@@ -301,6 +312,25 @@ export function addRandomObject(scene: THREE.Scene) {
 					scene.add(child);
 					planetObjects.push(child);
 					console.log('planetObjects loaded:', planetObjects);
+
+
+					/**
+					 * Add a glowing light surrounding the object 
+					 */
+					const glowMesh = child.clone();
+					glowMesh.material = new THREE.MeshStandardMaterial({
+							color: 0x00ffcc,
+							emissive: 0x00ffcc,
+							emissiveIntensity: 2.0,
+							transparent: true,
+							opacity: 0.7,
+						});
+					child.position.set(...OBJECT_SPAWN_LOCATION);
+					child.scale.set(targetObjectHeight / size.y, targetObjectHeight / size.y, targetObjectHeight / size.y);
+					// Name or flag it for easy removal later
+					glowMesh.name = 'glowMesh';
+					// Attach the glowing mesh as a child of the original
+					scene.add(glowMesh);
 				}
 			}
 		});
