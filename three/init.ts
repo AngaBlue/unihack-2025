@@ -133,7 +133,7 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 
     // }
     mtlLoader.load('mushrooms.mtl', materials => {
-        const name = "sakura"
+        const name = "sakura" as string;
         materials.preload();
         const objLoader = new OBJLoader();
         objLoader.setMaterials(materials);
@@ -161,7 +161,7 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
                     /**
                      * TODO: Create function which creates glowing box around object (emmissive matieral - then can add it)
                      */
-                    const targetObjectHeight = name === "mushrooms" ? 8: Math.random()*5 + OBJECT_SIZE + 0.1*(objectHeight)
+                    const targetObjectHeight = (name === "mushrooms") ? 8: Math.random()*5 + OBJECT_SIZE + 0.1*(objectHeight)
                     child.position.set(...OBJECT_SPAWN_LOCATION);
 
                     // mushrooms are too fucking big
