@@ -51,7 +51,7 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 		return mesh;
 	}
 
-	camera.position.set(0, 0, 500);
+	camera.position.set(0, 0, 300);
 
 	/**
 	 * Add planet
