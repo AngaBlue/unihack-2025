@@ -3,9 +3,14 @@ interface Response {
 	tasks: string[];
 }
 
+const fallback: Response = {
+	motivation_messages: [],
+	tasks: ['Drink a glass of water.', 'Take a 5 minute walk outside.', 'Do a quick meditation session.']
+};
+
 export default async function fetchAiTasks(goal: string): Promise<Response> {
 	try {
-		throw new Error();
+		return fallback;
 		const res = await fetch('/GetSkills', {
 			method: 'POST',
 			headers: {
@@ -31,8 +36,5 @@ export default async function fetchAiTasks(goal: string): Promise<Response> {
 		console.error('Error fetching tasks.', error);
 	}
 
-	return {
-		motivation_messages: [],
-		tasks: ['Drink a glass of water.', 'Take a 5 minute walk outside.', 'Do a quick meditation session.']
-	};
+	return fallback;
 }
