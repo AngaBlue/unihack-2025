@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib bamboo.mtl
+mtllib 2.mtl
 v 0.793322 5.667902 -0.088289
 v 0.705032 5.667902 -0.124860
 v 0.616743 5.667902 -0.088289

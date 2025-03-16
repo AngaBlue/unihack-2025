@@ -128,58 +128,6 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	const mtlLoader = new MTLLoader();
 	mtlLoader.setPath('/');
 
-	// // }
-	// mtlLoader.load('objects/7.mtl', materials => {
-	//     const name = "sakura"
-	//     materials.preload();
-	//     const objLoader = new OBJLoader();
-	//     objLoader.setMaterials(materials);
-	//     objLoader.setPath('/');
-
-	//     objLoader.load('objects/7.obj', (object: THREE.Object3D) => {
-	//         if (object instanceof THREE.Group) {
-	//             object.updateWorldMatrix(true, true);
-
-	//             for (const child of object.children) {
-	//                 console.log(child)
-	//                 object.remove(child);
-	//                 // If the child is a Mesh, recenter its geometry.
-	//                 if (child instanceof THREE.Mesh && child.geometry) {
-	//                     child.geometry.center();
-	//                 }
-
-	//                 // Compute bounding box and height
-	//                 const boundingBox = new THREE.Box3().setFromObject(child);
-	//                 const size = new THREE.Vector3();
-	//                 boundingBox.getSize(size);
-	//                 const objectHeight = size.y;
-	//                 console.log('Object height:', size);
-
-	//                 /**
-	//                  * TODO: Create function which creates glowing box around object (emmissive matieral - then can add it)
-	//                  */
-	//                 const targetObjectHeight = name === "mushrooms" ? 8: Math.random()*5 + OBJECT_SIZE + 0.1*(objectHeight)
-	//                 child.position.set(...OBJECT_SPAWN_LOCATION);
-
-	//                 // mushrooms are too fucking big
-
-	//                 child.scale.set(targetObjectHeight/objectHeight, targetObjectHeight/objectHeight, targetObjectHeight/objectHeight);
-	//                 child.userData.height = targetObjectHeight;
-	//                 console.log('targetObjectHeight height:', targetObjectHeight);
-
-	//                 scene.add(child);
-	//                 planetObjects.push(child);
-	//             }
-	//             console.log('planetObjects loaded:', planetObjects);
-	//         } else {
-	//             console.log("Cannot load in this object")
-	//         }
-	//     });
-	// });
-
-	/**
-	 * WHen the object is added, it comes in a glowing box (which is removed when the object is moved out of it)
-	 */
 	/**
 	 * Adding drag controls for planetObjects
 	 */
@@ -191,8 +139,9 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 
 	function dragStartCallback(event: DragEvent) {
 		controls.enabled = false;
-		event.object.startColor = event.object.material.color.getHex();
+
 		if (event.object.material.color) {
+			event.object.startColor = event.object.material.color.getHex();
 			event.object.material.color.setHex(0x000000);
 		}
 		// remove the bright light if one exists
@@ -278,6 +227,7 @@ export function addRandomObject(scene: THREE.Scene) {
 	} while (loadedNumbers.has(num));
 
 	loadedNumbers.add(num);
+	num = 11;
 
 	const mtlLoader = new MTLLoader();
 	mtlLoader.load(`objects/${num}.mtl`, materials => {
