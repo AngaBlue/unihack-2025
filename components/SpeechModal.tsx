@@ -1,6 +1,6 @@
 'use client';
 import { useGoalContext } from '@/context/GoalContext';
-import queryAI from '@/util/queryAI';
+import fetchAiTasks from '@/util/fetchAITasks';
 import Image from 'next/image';
 import { type FormEventHandler, type ReactElement, useState } from 'react';
 import { FaSpinner } from 'react-icons/fa';
@@ -64,7 +64,7 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 
 		if (index >= speechChain.length - 1) {
 			setIsLoading(true);
-			const { tasks } = await queryAI(goal);
+			const { tasks } = await fetchAiTasks(goal);
 			setIsLoading(false);
 			setSkillTree(tasks);
 			console.log(skillTree);
@@ -73,7 +73,7 @@ export function SpeechModal({ speechChain }: ModalChainProps): ReactElement | nu
 
 	// biome-ignore lint/correctness/noUnusedVariables: <explanation>
 	async function getSkills() {
-		const { tasks } = await queryAI(goal);
+		const { tasks } = await fetchAiTasks(goal);
 		setSkillTree(tasks);
 	}
 
