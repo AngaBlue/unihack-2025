@@ -82,7 +82,7 @@ export default function ChatOverlay({ steps }: ChatOverlayProps) {
 							)}
 							{currentStep.onConfirm && (
 								<Button onClick={handleConfirm} className='bg-brand-600 text-white hover:bg-brand-700 cursor-pointer'>
-									Confirm
+									{currentStep.onCancel ? 'Done!' : 'Confirm'}
 								</Button>
 							)}
 							{!(currentStep.onConfirm || currentStep.onCancel) && (
@@ -93,19 +93,19 @@ export default function ChatOverlay({ steps }: ChatOverlayProps) {
 						</div>
 					</CardContent>
 					<div
-							className='absolute w-0 h-0
+						className='absolute w-0 h-0
 								border-l-[57px] border-l-transparent
 								border-t-[34px] border-t-background
 								border-r-[6px] border-r-transparent
 								right-2 top-1/1'
-						/>
-						<div
-							className='absolute w-0 h-0 
+					/>
+					<div
+						className='absolute w-0 h-0 
 								border-l-[50px] border-l-transparent
 								border-t-[30px] border-t-brand-100
 								border-r-[5px] border-r-transparent
 								right-3 top-1/1'
-						/>
+					/>
 				</Card>
 				<div className='absolute -right-10 -bottom-16 w-20 h-20 rounded-full overflow-hidden border-4 border-brand-400 bg-brand-700 shadow-md'>
 					<Image src={mascot} alt='Mascot' layout='fill' objectFit='contain' className='animate-float' />
