@@ -188,7 +188,6 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	};
 	animate();
 	scene.add(planet);
-	// addRandomObject(scene);
 	addInitialTerrain(scene, 50);
 }
 
@@ -266,11 +265,11 @@ function loadedClone(source: THREE.Object3D): THREE.Object3D {
  */
 export function addRandomObject(scene: THREE.Scene) {
 	let num: number;
+	// num = Math.floor(Math.random() * 9) + 2;
 	do {
 		num = Math.floor(Math.random() * 9) + 2;
-	} while (loadedNumbers.has(num) && num !== 3);
+	} while ( num == 3); //loadedNumbers.has(num)
 
-	// num = 3;
 	loadedNumbers.add(num);
 
 	const mtlLoader = new MTLLoader();
@@ -303,7 +302,7 @@ export function addRandomObject(scene: THREE.Scene) {
 					child.userData.height = size.y;
 
 					// Set initial position
-					const targetObjectHeight = num === 8 ? 8 : Math.random() * 5 + OBJECT_SIZE + 0.1 * size.y;
+					const targetObjectHeight = num === 8 ? 8 : Math.random() * 5 + OBJECT_SIZE;// + OBJECT_SIZE + 0.1 * size.y;
 					child.position.set(...OBJECT_SPAWN_LOCATION);
 					child.scale.set(targetObjectHeight / size.y, targetObjectHeight / size.y, targetObjectHeight / size.y);
 					child.userData.height = targetObjectHeight;
