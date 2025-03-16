@@ -1,4 +1,5 @@
 'use client';
+import ChatHander from '@/components/ChatHandler';
 import init from '@/three/init';
 import { hydrate } from '@/util/hydrated';
 import { useEffect, useRef } from 'react';
@@ -63,6 +64,7 @@ export default function Client() {
 		<GoalProvider>
 			<ThreeProvider scene={sceneRef.current} camera={cameraRef.current} renderer={rendererRef.current}>
 				<BackgroundMusic />
+				<ChatHander />
 				<div ref={divRef} />
 			</ThreeProvider>
 		</GoalProvider>
