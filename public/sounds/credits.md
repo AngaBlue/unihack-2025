@@ -15,3 +15,7 @@ Owl Hooting.mp3 by WanderingLeprechaun -- https://freesound.org/s/668709/ -- Lic
 bonfire flames sizzling by florianreichelt -- https://freesound.org/s/563764/ -- License: Creative Commons 0
 
 11 of 14 Rain and Traffic through the Night.mp3 by klankschap -- https://freesound.org/s/54766/ -- License: Attribution NonCommercial 4.0
+
+Audacity click track 01 - 120 bmp - 10 min - 3.2 Mb.mp3 by Leo9geo -- https://freesound.org/s/638528/ -- License: Creative Commons 0
+
+Dbl Click.mp3 by 7778 -- https://freesound.org/s/202312/ -- License: Creative Commons 0
