@@ -90,9 +90,13 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	controls.maxDistance = 1500;
 
 	/**
-	 * Add skybox background
+	 * Add skybox background, starfield and nebula 
 	 */
-	scene.add(createSkybox());
+	let [starfield, mesh, nebula] = createSkybox();
+	scene.add(starfield);
+	scene.add(mesh);
+	scene.add(nebula);
+
 
 	/**
 	 * Add robot
