@@ -1,6 +1,6 @@
 # Blender v2.78 (sub 0) OBJ File: '2.blend'
 # www.blender.org
-mtllib forest.mtl
+mtllib 7.mtl
 o forest
 v -0.681908 -0.258976 0.818618
 v -0.655281 -0.258976 0.839248

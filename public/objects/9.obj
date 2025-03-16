@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib Pagoda.mtl
+mtllib 9.mtl
 g default
 v 7.411059 36.671917 -3.705530
 v 9.411891 38.034573 -9.411891

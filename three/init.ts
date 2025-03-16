@@ -119,7 +119,7 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
         if (animationActions.length > 0) {
             activeAction = animationActions[0];
             activeAction.play();
-        }
+      }
     });
 
     /**
@@ -129,57 +129,109 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
     const mtlLoader = new MTLLoader();
     mtlLoader.setPath('/');
 
-    // function addRandomObject(){
+	function addRandomObject(scene: THREE.Scene, planetObjects: THREE.Object3D[], loadedNumbers: Set<number>) {
+		let num: number;
+		do {
+		  num = Math.floor(Math.random() * 9) + 2;
+		} while (loadedNumbers.has(num));
+	  
+		loadedNumbers.add(num);
+	  
+		const mtlLoader = new MTLLoader();
+		mtlLoader.load(`objects/${num}.mtl`, (materials) => {
+		  materials.preload();
+	  
+		  const objLoader = new OBJLoader();
+		  objLoader.setMaterials(materials);
+		  objLoader.setPath('/');
+	  
+		  objLoader.load(`objects/${num}.obj`, (object: THREE.Object3D) => {
+			if (!(object instanceof THREE.Group)) {
+			  console.warn('Loaded object is not a group');
+			  return;
+			}
+	  
+			object.updateWorldMatrix(true, true);
+	  
+			for (const child of object.children) {
+			  object.remove(child);
+	  
+			  if (child instanceof THREE.Mesh && child.geometry) {
+				child.geometry.center();
+	  
+				// Compute bounding box and height
+				const boundingBox = new THREE.Box3().setFromObject(child);
+				const size = new THREE.Vector3();
+				boundingBox.getSize(size);	  
+				// Attach computed height to userData
+				child.userData.height = size.y;
+	  
+				// Set initial position
+				const targetObjectHeight = num === 8 ? 8: Math.random()*5 + OBJECT_SIZE + 0.1*(size.y)
+				child.position.set(...OBJECT_SPAWN_LOCATION);
+				child.scale.set(targetObjectHeight/size.y, targetObjectHeight/size.y, targetObjectHeight/size.y);
+				child.userData.height = targetObjectHeight;
+				console.log('targetObjectHeight height:', targetObjectHeight);
 
-    // }
-    mtlLoader.load('mushrooms.mtl', materials => {
-        const name = "sakura"
-        materials.preload();
-        const objLoader = new OBJLoader();
-        objLoader.setMaterials(materials);
-        objLoader.setPath('/');
+				// Add to scene and tracking array
+				scene.add(child);
+				planetObjects.push(child);
+				console.log('planetObjects loaded:', planetObjects);
+			  }
+			}
+		  })
+		  
+		})
+	  }
+    // // }
+    // mtlLoader.load('objects/7.mtl', materials => {
+    //     const name = "sakura"
+    //     materials.preload();
+    //     const objLoader = new OBJLoader();
+    //     objLoader.setMaterials(materials);
+    //     objLoader.setPath('/');
 
-        objLoader.load('mushrooms.obj', (object: THREE.Object3D) => {
-            if (object instanceof THREE.Group) {
-                object.updateWorldMatrix(true, true);
+    //     objLoader.load('objects/7.obj', (object: THREE.Object3D) => {
+    //         if (object instanceof THREE.Group) {
+    //             object.updateWorldMatrix(true, true);
 
-                for (const child of object.children) {
-                    console.log(child)
-                    object.remove(child);
-                    // If the child is a Mesh, recenter its geometry.
-                    if (child instanceof THREE.Mesh && child.geometry) {
-                        child.geometry.center();
-                    }
+    //             for (const child of object.children) {
+    //                 console.log(child)
+    //                 object.remove(child);
+    //                 // If the child is a Mesh, recenter its geometry.
+    //                 if (child instanceof THREE.Mesh && child.geometry) {
+    //                     child.geometry.center();
+    //                 }
 
-                    // Compute bounding box and height
-                    const boundingBox = new THREE.Box3().setFromObject(child);
-                    const size = new THREE.Vector3();
-                    boundingBox.getSize(size);
-                    const objectHeight = size.y;
-                    console.log('Object height:', size);
+    //                 // Compute bounding box and height
+    //                 const boundingBox = new THREE.Box3().setFromObject(child);
+    //                 const size = new THREE.Vector3();
+    //                 boundingBox.getSize(size);
+    //                 const objectHeight = size.y;
+    //                 console.log('Object height:', size);
                 
-                    /**
-                     * TODO: Create function which creates glowing box around object (emmissive matieral - then can add it)
-                     */
-                    const targetObjectHeight = name === "mushrooms" ? 8: Math.random()*5 + OBJECT_SIZE + 0.1*(objectHeight)
-                    child.position.set(...OBJECT_SPAWN_LOCATION);
+    //                 /**
+    //                  * TODO: Create function which creates glowing box around object (emmissive matieral - then can add it)
+    //                  */
+    //                 const targetObjectHeight = name === "mushrooms" ? 8: Math.random()*5 + OBJECT_SIZE + 0.1*(objectHeight)
+    //                 child.position.set(...OBJECT_SPAWN_LOCATION);
 
-                    // mushrooms are too fucking big
+    //                 // mushrooms are too fucking big
                     
-                    child.scale.set(targetObjectHeight/objectHeight, targetObjectHeight/objectHeight, targetObjectHeight/objectHeight);
-                    child.userData.height = targetObjectHeight;
-                    console.log('targetObjectHeight height:', targetObjectHeight);
+    //                 child.scale.set(targetObjectHeight/objectHeight, targetObjectHeight/objectHeight, targetObjectHeight/objectHeight);
+    //                 child.userData.height = targetObjectHeight;
+    //                 console.log('targetObjectHeight height:', targetObjectHeight);
 
 
-                    scene.add(child);
-                    planetObjects.push(child);
-                } 
-                console.log('planetObjects loaded:', planetObjects);
-            } else {
-                console.log("Cannot load in this object")
-            }
-        });
-    });
+    //                 scene.add(child);
+    //                 planetObjects.push(child);
+    //             } 
+    //             console.log('planetObjects loaded:', planetObjects);
+    //         } else {
+    //             console.log("Cannot load in this object")
+    //         }
+    //     });
+    // });
 
 
     /**
@@ -270,5 +322,7 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 
     animate();
     scene.add(planet);
+	const loadedNumbers = new Set<number>();
+	addRandomObject(scene, planetObjects, loadedNumbers);
 }
 
