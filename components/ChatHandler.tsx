@@ -25,7 +25,6 @@ export default function ChatHandler() {
 	}, []);
 
 	const fetchGoals = useCallback(async (goal: string) => {
-		console.log('fetching goals');
 		const res = await fetchAiTasks(goal);
 		setTasks(res.tasks);
 	}, []);
