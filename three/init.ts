@@ -268,8 +268,9 @@ export function addRandomObject(scene: THREE.Scene) {
 	let num: number;
 	do {
 		num = Math.floor(Math.random() * 9) + 2;
-	} while (loadedNumbers.has(num));
+	} while (loadedNumbers.has(num) && num !== 3);
 
+	// num = 3;
 	loadedNumbers.add(num);
 
 	const mtlLoader = new MTLLoader();
