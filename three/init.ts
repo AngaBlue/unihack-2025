@@ -3,7 +3,6 @@ import { OrbitControls } from 'three-stdlib';
 import { MTLLoader } from 'three-stdlib';
 import { OBJLoader } from 'three-stdlib';
 import { DragControls } from 'three-stdlib';
-import { FBXLoader } from 'three-stdlib';
 import { ImprovedNoise } from 'three-stdlib';
 import createSkybox from './createSkybox';
 import getFresnelMat from './getFresnelMat';
@@ -98,31 +97,6 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	scene.add(nebula);
 
 	/**
-	 * Add robot
-	 */
-	const robotGroup = new THREE.Group(); // Create a parent group
-	robotGroup.position.set(100, 10, 100); // Fix this position in the world
-	scene.add(robotGroup); // Add to scene
-
-	const fbxLoader = new FBXLoader();
-	fbxLoader.load('Robot.fbx', object => {
-		object.scale.set(15, 15, 15); // Scale as needed
-		robotGroup.add(object); // Add robot to parent group instead of directly to the scene
-
-		mixer = new THREE.AnimationMixer(object);
-		for (const clip of object.animations) {
-			if (!mixer) continue;
-			const action = mixer.clipAction(clip);
-			animationActions.push(action);
-		}
-
-		if (animationActions.length > 0) {
-			activeAction = animationActions[0];
-			activeAction.play();
-		}
-	});
-
-	/**
 	 * Add planetObjects
 	 */
 	const mtlLoader = new MTLLoader();
@@ -196,18 +170,12 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 
 	scene.add(ambientLight);
 
-	const animationActions: THREE.AnimationAction[] = [];
-	let activeAction: THREE.AnimationAction;
-	let mixer: THREE.AnimationMixer | null = null;
-
 	/**
 	 * Animation loop
 	 */
 	const clock = new THREE.Clock();
 	const animate = () => {
 		requestAnimationFrame(animate);
-		const delta = clock.getDelta();
-		if (mixer) mixer.update(delta);
 		planet.userData.update(clock.elapsedTime);
 		renderer.render(scene, camera);
 	};
@@ -216,7 +184,6 @@ export default function init(scene: THREE.Scene, camera: THREE.PerspectiveCamera
 	scene.add(planet);
 	addRandomObject(scene);
 }
-
 
 const loadedNumbers = new Set<number>();
 
