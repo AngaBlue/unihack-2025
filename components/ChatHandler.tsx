@@ -8,7 +8,7 @@ import ChatOverlay, { type Step } from './ChatOverlay';
 const MIN_TASK_TIME = 5_000;
 const MAX_TASK_TIME = 20_000;
 
-export default function ChatHander() {
+export default function ChatHandler() {
 	const { scene } = useThree();
 	const [name, setName] = useState('');
 	const [goal, setGoal] = useState('');
